@@ -898,10 +898,11 @@
             <div class="quote-icon">"</div>
             <p>Before ChamaHub, we tracked everything in a notebook. Now we can see who has paid, who owes, and our loans are managed automatically. It has transformed our group!</p>
             <div class="testimonial-author">
-                <div class="author-avatar">AK</div>
+                <img class="author-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Amina Kariuki" style="object-fit: cover;">
                 <div class="author-info">
                     <h4>Amina Kariuki</h4>
-                    <p>Chama Treasurer, Nairobi</p>
+                    <p style="margin-bottom: 2px;">Chama Treasurer</p>
+                    <small style="color: var(--primary); font-weight: 700;">Group: Umoja Investment</small>
                 </div>
             </div>
         </div>
@@ -909,10 +910,11 @@
             <div class="quote-icon">"</div>
             <p>The M-Pesa integration is absolutely seamless. I get an STK Push on my phone, I enter my PIN, and my contribution is marked paid within seconds. No more manual transfers!</p>
             <div class="testimonial-author">
-                <div class="author-avatar">JO</div>
+                <img class="author-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="James Omondi" style="object-fit: cover;">
                 <div class="author-info">
                     <h4>James Omondi</h4>
-                    <p>Group Member, Kisumu</p>
+                    <p style="margin-bottom: 2px;">Group Member</p>
+                    <small style="color: var(--primary); font-weight: 700;">Group: Vision 2030 Chama</small>
                 </div>
             </div>
         </div>
@@ -920,10 +922,11 @@
             <div class="quote-icon">"</div>
             <p>As the admin of a 30-member chama, I used to spend hours reconciling payments. ChamaHub reduced that to minutes. The reports feature is world-class!</p>
             <div class="testimonial-author">
-                <div class="author-avatar">FW</div>
+                <img class="author-avatar" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Faith Wanjiku" style="object-fit: cover;">
                 <div class="author-info">
                     <h4>Faith Wanjiku</h4>
-                    <p>Chama Chairperson, Mombasa</p>
+                    <p style="margin-bottom: 2px;">Chama Chairperson</p>
+                    <small style="color: var(--primary); font-weight: 700;">Group: Baraka Women Group</small>
                 </div>
             </div>
         </div>
