@@ -17,6 +17,10 @@ ENV LOG_CHANNEL stderr
 # Copy application files
 COPY . .
 
+# Override nginx site config to fix Laravel routing (try_files for /login, /register etc.)
+COPY nginx/default.conf /etc/nginx/sites-enabled/default.conf
+
+
 # Install Composer dependencies explicitly
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
