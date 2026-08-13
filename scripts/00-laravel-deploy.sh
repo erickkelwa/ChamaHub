@@ -20,6 +20,9 @@ php artisan optimize:clear || true
 echo "--- Running migrations ---"
 php artisan migrate --force
 
+echo "--- Seeding admin user ---"
+php artisan db:seed --class=AdminSeeder --force || true
+
 echo "--- Caching config and views only ---"
 php artisan config:cache
 php artisan view:cache
