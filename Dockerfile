@@ -21,7 +21,9 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
 # Create necessary directories and set permissions
-RUN mkdir -p /var/www/html/storage/framework/sessions \
+RUN rm -f /var/www/html/bootstrap/cache/routes-v7.php \
+    && rm -f /var/www/html/bootstrap/cache/config.php \
+    && mkdir -p /var/www/html/storage/framework/sessions \
     /var/www/html/storage/framework/views \
     /var/www/html/storage/framework/cache/data \
     /var/www/html/storage/logs \
