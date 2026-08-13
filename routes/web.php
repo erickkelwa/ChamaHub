@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\MemberController;
 use Illuminate\Support\Facades\Route;
@@ -15,30 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('landing');
-});
+Route::get('/', [HomeController::class, 'landing']);
 
-Route::get('/dashboard', function () {
-    $user = auth()->user();
+Route::get('/dashboard', [HomeController::class, 'dashboard'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-    if ($user->role === 'admin' || $user->role === 'treasurer') {
-        $totalMembers = \App\Models\User::count();
-        $totalContributions = \App\Models\Contribution::where('status', 'paid')->sum('amount_paid');
-        $totalLoans = \App\Models\Loan::where('status', 'approved')->sum('amount_approved');
-        $pendingLoansCount = \App\Models\Loan::where('status', 'pending')->count();
-        
-        return view('dashboard', compact('totalMembers', 'totalContributions', 'totalLoans', 'pendingLoansCount'));
-    } else {
-        // Member-specific stats
-        $myTotalSavings = \App\Models\Contribution::where('user_id', $user->id)->where('status', 'paid')->sum('amount_paid');
-        $myUnpaidDues = \App\Models\Contribution::where('user_id', $user->id)->where('status', '!=', 'paid')->sum('amount_due') - \App\Models\Contribution::where('user_id', $user->id)->where('status', '!=', 'paid')->sum('amount_paid');
-        $myActiveLoan = \App\Models\Loan::where('user_id', $user->id)->where('status', 'approved')->first();
-        $myRecentContributions = \App\Models\Contribution::where('user_id', $user->id)->latest('month')->take(5)->get();
-
-        return view('member_dashboard', compact('myTotalSavings', 'myUnpaidDues', 'myActiveLoan', 'myRecentContributions'));
-    }
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
