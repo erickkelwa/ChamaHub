@@ -14,14 +14,16 @@ mkdir -p storage/logs
 mkdir -p bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-echo "--- Clearing old caches ---"
+echo "--- Clearing ALL old caches ---"
 php artisan config:clear || true
+php artisan route:clear || true
+php artisan view:clear || true
 php artisan cache:clear || true
 
 echo "--- Running migrations ---"
 php artisan migrate --force
 
-echo "--- Caching config, routes, views ---"
+echo "--- Rebuilding config, routes, views ---"
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
