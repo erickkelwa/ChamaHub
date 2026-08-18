@@ -1,6 +1,7 @@
-﻿{
+{
   "name": "ChamaHub — Savings & Loans Portal",
   "short_name": "ChamaHub",
+  "id": "/",
   "description": "Manage your Chama savings, loans, meetings and contributions all in one place.",
   "start_url": "/dashboard",
   "scope": "/",
