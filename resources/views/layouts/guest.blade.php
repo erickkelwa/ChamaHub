@@ -4,6 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="theme-color" content="#4f46e5">
+        <link rel="manifest" href="/manifest.json">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -26,5 +28,13 @@
                 {{ $slot }}
             </div>
         </div>
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW fail: ', err));
+                });
+            }
+        </script>
     </body>
 </html>

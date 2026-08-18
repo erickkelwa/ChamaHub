@@ -8,10 +8,25 @@
             Welcome back, {{ auth()->user()->name }}. Track your personal savings and loans here.
         </p>
     </div>
-    <button class="btn btn-success btn-lg rounded-pill shadow-sm px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#depositMpesaModal">
-        <i class="bi bi-phone-vibrate me-2"></i> Deposit / Save Money
-    </button>
+    <div class="d-flex gap-2 flex-wrap">
+        <button class="btn btn-outline-primary btn-lg rounded-pill shadow-sm px-4 fw-bold bg-white" data-bs-toggle="modal" data-bs-target="#requestLoanModal">
+            <i class="bi bi-bank2 me-2"></i> Request Loan
+        </button>
+        <button class="btn btn-success btn-lg rounded-pill shadow-sm px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#depositMpesaModal">
+            <i class="bi bi-phone-vibrate me-2"></i> Deposit / Save Money
+        </button>
+    </div>
 </div>
+
+@if(isset($myUnpaidFines) && $myUnpaidFines->count() > 0)
+    <div class="alert alert-danger shadow-sm border-0 d-flex align-items-center mb-4" role="alert" style="border-left: 4px solid #dc2626 !important;">
+        <i class="bi bi-exclamation-triangle-fill fs-3 me-3 text-danger"></i>
+        <div>
+            <h5 class="alert-heading fw-bold mb-1">Attention: You have unpaid fines!</h5>
+            <p class="mb-0">You have <strong>{{ $myUnpaidFines->count() }}</strong> pending {{ Str::plural('fine', $myUnpaidFines->count()) }} totaling <strong>Ksh {{ number_format($myUnpaidFines->sum('amount'), 2) }}</strong>. Please settle them to remain in good standing.</p>
+        </div>
+    </div>
+@endif
 
 <!-- Personal Stats -->
 <div class="row g-3 mb-4">
@@ -199,6 +214,61 @@
                     <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-success btn-lg rounded-pill px-4 fw-bold shadow-sm">
                         <i class="bi bi-send-fill me-2"></i> Initiate STK Push
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Request Loan Modal -->
+<div class="modal fade" id="requestLoanModal" tabindex="-1" aria-labelledby="requestLoanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-primary text-white rounded-top-4 p-4 border-0">
+                <h5 class="modal-title fw-bold" id="requestLoanModalLabel">
+                    <i class="bi bi-bank2 me-2"></i> Request a New Loan
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('loan.applications.store') }}" method="POST">
+                @csrf
+                <div class="modal-body p-4">
+                    <div class="alert alert-info border-0 shadow-sm bg-primary bg-opacity-10 d-flex align-items-center mb-4">
+                        <i class="bi bi-info-circle-fill fs-4 text-primary me-3"></i>
+                        <div>
+                            <p class="mb-0 small text-dark">Your maximum loan limit is <strong>3x your total savings</strong> (Ksh {{ number_format($myTotalSavings * 3, 2) }}).</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="amount_requested" class="form-label fw-bold text-heading">Amount Requested (Ksh)</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light text-muted fw-bold">Ksh</span>
+                            <input type="number" name="amount_requested" id="amount_requested" class="form-control fw-bold" placeholder="e.g. 50000" min="100" max="{{ $myTotalSavings * 3 }}" step="100" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="repayment_months" class="form-label fw-bold text-heading">Repayment Duration (Months)</label>
+                        <select name="repayment_months" id="repayment_months" class="form-select form-select-lg" required>
+                            <option value="">Select duration...</option>
+                            <option value="1">1 Month</option>
+                            <option value="3">3 Months</option>
+                            <option value="6">6 Months</option>
+                            <option value="12">12 Months</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="purpose" class="form-label fw-bold text-heading">Purpose of Loan</label>
+                        <textarea name="purpose" id="purpose" class="form-control" rows="3" required placeholder="Briefly describe what the loan is for..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0 p-4 rounded-bottom-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 fw-bold shadow-sm">
+                        Submit Application <i class="bi bi-arrow-right ms-1"></i>
                     </button>
                 </div>
             </form>

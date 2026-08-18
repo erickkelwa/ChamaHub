@@ -28,6 +28,20 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
+    // Decisions
+    Route::get('/decisions', [\App\Http\Controllers\PollController::class, 'index'])->name('decisions.index');
+    Route::post('/decisions/{poll}/vote', [\App\Http\Controllers\PollController::class, 'vote'])->name('decisions.vote');
+
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    
+    // Member Loan Application
+    Route::post('/loan-applications', [\App\Http\Controllers\LoanApplicationController::class, 'store'])->name('loan.applications.store');
+
+    // Meetings (read-only for all members)
+    Route::get('/meetings', [\App\Http\Controllers\Admin\MeetingController::class, 'index'])->name('admin.meetings.index');
+    Route::get('/meetings/{id}', [\App\Http\Controllers\Admin\MeetingController::class, 'show'])->name('admin.meetings.show');
+    
     // Admin Routes
     Route::middleware('admin')->group(function () {
         Route::resource('admin/members', MemberController::class)->names([
@@ -60,19 +74,29 @@ Route::middleware('auth')->group(function () {
             'destroy' => 'admin.loans.destroy',
         ]);
         
-        Route::resource('admin/meetings', \App\Http\Controllers\Admin\MeetingController::class)->names([
-            'index' => 'admin.meetings.index',
-            'create' => 'admin.meetings.create',
-            'store' => 'admin.meetings.store',
-            'show' => 'admin.meetings.show',
-            'edit' => 'admin.meetings.edit',
-            'update' => 'admin.meetings.update',
-            'destroy' => 'admin.meetings.destroy',
-        ]);
+        // Meetings (admin management only)
+        Route::get('admin/meetings/create', [\App\Http\Controllers\Admin\MeetingController::class, 'create'])->name('admin.meetings.create');
+        Route::post('admin/meetings', [\App\Http\Controllers\Admin\MeetingController::class, 'store'])->name('admin.meetings.store');
+        Route::get('admin/meetings/{id}/edit', [\App\Http\Controllers\Admin\MeetingController::class, 'edit'])->name('admin.meetings.edit');
+        Route::put('admin/meetings/{id}', [\App\Http\Controllers\Admin\MeetingController::class, 'update'])->name('admin.meetings.update');
+        Route::delete('admin/meetings/{id}', [\App\Http\Controllers\Admin\MeetingController::class, 'destroy'])->name('admin.meetings.destroy');
+        Route::post('admin/meetings/{meeting}/attendance', [\App\Http\Controllers\Admin\MeetingController::class, 'saveAttendance'])->name('admin.meetings.attendance');
         
         // Reports
         Route::get('admin/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('admin.reports.index');
         Route::post('admin/reports/reminders', [\App\Http\Controllers\Admin\ReportController::class, 'sendReminders'])->name('admin.reports.reminders');
+        
+        // Dividends Calculator
+        Route::get('admin/dividends', [\App\Http\Controllers\Admin\DividendController::class, 'index'])->name('admin.dividends.index');
+        
+        // Fines
+        Route::get('admin/fines', [\App\Http\Controllers\Admin\FineController::class, 'index'])->name('admin.fines.index');
+        Route::patch('admin/fines/{fine}/pay', [\App\Http\Controllers\Admin\FineController::class, 'markAsPaid'])->name('admin.fines.pay');
+        Route::patch('admin/fines/{fine}/waive', [\App\Http\Controllers\Admin\FineController::class, 'waive'])->name('admin.fines.waive');
+        
+        // Decisions Admin
+        Route::post('admin/decisions', [\App\Http\Controllers\PollController::class, 'store'])->name('admin.decisions.store');
+        Route::patch('admin/decisions/{poll}/close', [\App\Http\Controllers\PollController::class, 'close'])->name('admin.decisions.close');
         
         // Automated Schedule Generator
         Route::post('admin/contributions/generate-schedule', [\App\Http\Controllers\Admin\ContributionController::class, 'generateSchedule'])->name('admin.contributions.generate-schedule');

@@ -1,9 +1,13 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Meetings Management</h2>
-    <a href="{{ route('admin.meetings.create') }}" class="btn btn-primary"><i class="bi bi-calendar-plus"></i> Schedule New Meeting</a>
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="mb-0">Meetings</h2>
+    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'treasurer')
+        <div class="page-header-actions">
+            <a href="{{ route('admin.meetings.create') }}" class="btn btn-primary"><i class="bi bi-calendar-plus"></i> <span class="d-none d-sm-inline">Schedule New </span>Meeting</a>
+        </div>
+    @endif
 </div>
 
 <div class="card shadow-sm">
@@ -23,7 +27,9 @@
                         <th>Title</th>
                         <th>Venue/Link</th>
                         <th>Created By</th>
-                        <th>Actions</th>
+                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'treasurer')
+                            <th>Actions</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -36,14 +42,17 @@
                             <td>{{ $meeting->title }}</td>
                             <td>{{ $meeting->venue }}</td>
                             <td>{{ $meeting->creator->name ?? 'System' }}</td>
-                            <td>
-                                <a href="{{ route('admin.meetings.edit', $meeting->id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                <form action="{{ route('admin.meetings.destroy', $meeting->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this meeting?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </form>
-                            </td>
+                            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'treasurer')
+                                <td>
+                                    <a href="{{ route('admin.meetings.show', $meeting->id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
+                                    <a href="{{ route('admin.meetings.edit', $meeting->id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                                    <form action="{{ route('admin.meetings.destroy', $meeting->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this meeting?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>

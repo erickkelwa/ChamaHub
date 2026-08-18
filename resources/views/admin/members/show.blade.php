@@ -2,19 +2,19 @@
 
 @section('content')
 <!-- Header & Navigation -->
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
     <div>
         <a href="{{ route('admin.members.index') }}" class="text-decoration-none text-muted small me-2">
             <i class="bi bi-arrow-left"></i> Back to Members
         </a>
-        <h2 class="fw-bold mb-0 mt-1">{{ $member->name }}'s Savings & Profile</h2>
+        <h2 class="fw-bold mb-0 mt-1">{{ $member->name }}'s Savings &amp; Profile</h2>
     </div>
-    <div>
-        <a href="{{ route('admin.members.edit', $member->id) }}" class="btn btn-outline-primary rounded-pill px-3 me-2">
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{{ route('admin.members.edit', $member->id) }}" class="btn btn-outline-primary rounded-pill px-3">
             <i class="bi bi-pencil me-1"></i> Edit Profile
         </a>
         <button class="btn btn-success rounded-pill px-4 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#adminDepositModal">
-            <i class="bi bi-phone-vibrate me-1"></i> Record Deposit / M-Pesa Push
+            <i class="bi bi-phone-vibrate me-1"></i> <span class="d-none d-sm-inline">Record Deposit / M-Pesa Push</span><span class="d-sm-none">Deposit</span>
         </button>
     </div>
 </div>
@@ -29,9 +29,10 @@
         </div>
         <div class="col-md-6">
             <h3 class="fw-bold mb-1">{{ $member->name }}</h3>
-            <p class="text-muted mb-2">
-                <i class="bi bi-envelope me-1"></i> {{ $member->email }} &bull; 
-                <i class="bi bi-telephone me-1"></i> {{ $member->phone ?? 'No phone registered' }}
+            <p class="text-muted mb-2 d-flex flex-wrap gap-2 align-items-center">
+                <span><i class="bi bi-envelope me-1"></i> {{ $member->email }}</span>
+                <span class="d-none d-sm-inline">&bull;</span>
+                <span><i class="bi bi-telephone me-1"></i> {{ $member->phone ?? 'No phone registered' }}</span>
             </p>
             <div>
                 <span class="badge bg-{{ $member->role == 'admin' ? 'danger' : ($member->role == 'treasurer' ? 'warning' : 'primary') }} text-capitalize me-1">

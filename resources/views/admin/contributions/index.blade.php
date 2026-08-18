@@ -6,12 +6,12 @@
         <h2 class="fw-bold mb-1">Contributions Management</h2>
         <p class="text-muted mb-0">Track and generate monthly contribution schedules for all members.</p>
     </div>
-    <div>
-        <button type="button" class="btn btn-success me-2 rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#generateScheduleModal">
-            <i class="bi bi-magic me-1"></i> Generate Monthly Dues (1-Click)
+    <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-success rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#generateScheduleModal">
+            <i class="bi bi-magic me-1"></i> <span class="d-none d-sm-inline">Generate Monthly Dues (1-Click)</span><span class="d-sm-none">Generate Dues</span>
         </button>
         <a href="{{ route('admin.contributions.create') }}" class="btn btn-primary rounded-pill px-3 shadow-sm">
-            <i class="bi bi-plus-circle me-1"></i> Add Manual Record
+            <i class="bi bi-plus-circle me-1"></i> <span class="d-none d-sm-inline">Add Manual Record</span><span class="d-sm-none">Add Record</span>
         </a>
     </div>
 </div>

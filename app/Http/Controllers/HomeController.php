@@ -38,12 +38,14 @@ class HomeController extends Controller
                               - Contribution::where('user_id', $user->id)->where('status', '!=', 'paid')->sum('amount_paid');
         $myActiveLoan         = Loan::where('user_id', $user->id)->where('status', 'approved')->first();
         $myRecentContributions = Contribution::where('user_id', $user->id)->latest('month')->take(5)->get();
+        $myUnpaidFines        = \App\Models\Fine::where('user_id', $user->id)->where('status', 'unpaid')->get();
 
         return view('member_dashboard', compact(
             'myTotalSavings',
             'myUnpaidDues',
             'myActiveLoan',
-            'myRecentContributions'
+            'myRecentContributions',
+            'myUnpaidFines'
         ));
     }
 }

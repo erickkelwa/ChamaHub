@@ -102,9 +102,6 @@
                 <a href="{{ route('admin.loans.create') }}" class="dashboard-btn d-block p-3 mb-3 text-start">
                     <i class="bi bi-bank2 me-2 fs-5"></i> Process Loan
                 </a>
-                <a href="{{ route('admin.meetings.create') }}" class="dashboard-btn d-block p-3 text-start">
-                    <i class="bi bi-calendar-plus-fill me-2 fs-5"></i> Schedule Meeting
-                </a>
             @else
                 <div class="alert alert-info border-0 shadow-sm">
                     <i class="bi bi-info-circle-fill me-2"></i> Only Admins and Treasurers have access to quick actions.

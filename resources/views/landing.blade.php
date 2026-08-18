@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ChamaHub — The all-in-one digital platform for managing Chama savings, loans, and meetings in Kenya.">
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="manifest" href="/manifest.json">
     <title>ChamaHub — Digital Chama Management</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     
@@ -1028,5 +1030,15 @@
     });
 </script>
 
+    <!-- PWA Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('SW registered: ', registration.scope);
+                }).catch(err => console.log('SW registration failed: ', err));
+            });
+        }
+    </script>
 </body>
 </html>

@@ -138,4 +138,26 @@ class LoanController extends Controller
 
         return redirect()->route('admin.loans.index')->with('success', 'Loan deleted successfully.');
     }
+
+    /**
+     * Remove the specified loan from storage.
+     */
+    public function reject($id)
+    {
+        $loan = Loan::findOrFail($id);
+
+        $loan->update([
+            'status' => 'rejected',
+        ]);
+
+        \App\Models\Notification::create([
+            'user_id' => $loan->user_id,
+            'type' => 'loan_rejected',
+            'title' => 'Loan Rejected',
+            'message' => 'Unfortunately, your loan application for Ksh ' . number_format($loan->amount_requested, 2) . ' has been rejected. Please contact the treasurer for more details.',
+            'sent_at' => \Carbon\Carbon::now(),
+        ]);
+
+        return redirect()->route('admin.loans.index')->with('success', 'Loan rejected successfully.');
+    }
 }

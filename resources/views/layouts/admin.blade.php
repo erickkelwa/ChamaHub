@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="manifest" href="/manifest.json">
     <title>ChamaHub - Admin & Member Portal</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <!-- Favicon (Magnificent Aura Logo) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><defs><linearGradient id=%22grad%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22><stop offset=%220%25%22 stop-color=%22%234f46e5%22/><stop offset=%2250%25%22 stop-color=%22%23ec4899%22/><stop offset=%22100%25%22 stop-color=%22%23f59e0b%22/></linearGradient></defs><path d=%22M50 5 C80 5 95 25 95 50 C95 80 75 95 50 95 C20 95 5 75 5 50 C5 20 25 5 50 5 Z%22 fill=%22url(%23grad)%22 /><text x=%2250%22 y=%2268%22 font-size=%2250%22 font-family=%22Arial, sans-serif%22 font-weight=%22bold%22 text-anchor=%22middle%22 fill=%22white%22>∞</text></svg>">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -181,7 +184,7 @@
 
         /* ============================================================
            SIDEBAR
-        ============================================================ */
+        ============================================================        /* ── Sidebar Styles ── */
         .sidebar {
             height: 100vh;
             background: var(--primary-gradient);
@@ -196,11 +199,71 @@
             flex-direction: column;
         }
 
+        /* ── Magnificent Morphing Aura Logo ── */
+        .chama-logo-container {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #4f46e5 0%, #ec4899 50%, #f59e0b 100%);
+            background-size: 200% 200%;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: morphLogo 8s ease-in-out infinite, gradientShift 8s ease infinite;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+            margin-right: 12px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .chama-logo-container::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: rgba(255,255,255,0.15);
+            border-radius: inherit;
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: morphLogo 8s ease-in-out infinite reverse;
+        }
+        .chama-logo-icon {
+            color: white;
+            font-size: 1.3rem;
+            z-index: 2;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        @keyframes morphLogo {
+            0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+            67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
         /* Mobile: hide sidebar off-screen */
         @media (max-width: 991.98px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.show { transform: translateX(0); }
-            .main-content { margin-left: 0 !important; padding: 1.25rem 1rem !important; }
+            .main-content { margin-left: 0 !important; padding: 0.75rem !important; }
+            /* Tighten inner content padding on small screens */
+            .main-content .p-4 { padding: 0.75rem !important; }
+            /* Shrink oversized headings on mobile */
+            h2 { font-size: 1.35rem !important; }
+            h3 { font-size: 1.15rem !important; }
+            /* Ensure stat value doesn't overflow */
+            .card h3 { font-size: 1.2rem !important; word-break: break-word; }
+        }
+
+        @media (max-width: 575.98px) {
+            /* Extra-small: reduce card padding */
+            .card .p-4 { padding: 1rem !important; }
+            /* Make page header buttons full-width on xs */
+            .page-header-actions { width: 100%; }
+            .page-header-actions .btn { width: 100%; justify-content: center; }
         }
 
         /* Desktop: fixed sidebar, push content */
@@ -220,13 +283,13 @@
         .nav-link-custom {
             color: rgba(255,255,255,0.85);
             text-decoration: none;
-            padding: 0.9rem 1.5rem;
+            padding: 0.65rem 1.5rem; /* Reduced from 0.9rem to save space */
             display: flex; align-items: center;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border-left: 4px solid transparent;
         }
-        .nav-link-custom i { font-size: 1.2rem; margin-right: 12px; }
+        .nav-link-custom i { font-size: 1.1rem; margin-right: 12px; } /* Slightly smaller icon */
         .nav-link-custom:hover, .nav-link-custom.active {
             background-color: rgba(255,255,255,0.18);
             color: white;
@@ -312,8 +375,11 @@
             <button class="btn text-white me-2 p-1 fs-3 border-0 bg-transparent" id="mobileMenuBtn" aria-label="Toggle Navigation">
                 <i class="bi bi-list"></i>
             </button>
-            <h5 class="mb-0 fw-bold d-flex align-items-center">
-                <i class="bi bi-hexagon-fill me-2 fs-4 opacity-75"></i> ChamaHub
+            <h5 class="mb-0 fw-bold d-flex align-items-center tracking-tight">
+                <div class="chama-logo-container" style="width:30px; height:30px; margin-right:8px;">
+                    <i class="bi bi-infinity chama-logo-icon" style="font-size: 1.1rem;"></i>
+                </div>
+                ChamaHub
             </h5>
         </div>
         <div class="d-flex align-items-center gap-2">
@@ -335,17 +401,28 @@
         <div class="sidebar" id="sidebar">
 
             <div class="sidebar-header d-flex justify-content-between align-items-center">
-                <h4 class="d-flex align-items-center mb-0">
-                    <i class="bi bi-hexagon-fill me-2 fs-3 text-white-50"></i> ChamaHub
+                <h4 class="d-flex align-items-center mb-0 tracking-tight fw-bold" style="letter-spacing: -0.5px;">
+                    <div class="chama-logo-container">
+                        <i class="bi bi-infinity chama-logo-icon"></i>
+                    </div>
+                    ChamaHub
                 </h4>
                 <button class="btn text-white d-lg-none p-0 fs-4 border-0 bg-transparent" id="closeSidebarBtn">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
 
-            <div class="mt-3 flex-grow-1" style="overflow-y:auto;">
+            <div class="mt-3 flex-grow-1" style="overflow-y:auto; overflow-x:hidden; min-height:0;">
                 <a href="/dashboard" class="nav-link-custom {{ request()->is('dashboard*') ? 'active' : '' }}">
                     <i class="bi bi-grid-1x2-fill"></i> Dashboard
+                </a>
+                
+                <a href="{{ route('decisions.index') }}" class="nav-link-custom {{ request()->is('decisions*') ? 'active' : '' }}">
+                    <i class="bi bi-ui-radios"></i> Decisions & Polls
+                </a>
+
+                <a href="{{ route('admin.meetings.index') }}" class="nav-link-custom {{ request()->is('admin/meetings*') ? 'active' : '' }}">
+                    <i class="bi bi-calendar-event-fill"></i> Meetings
                 </a>
 
                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'treasurer')
@@ -364,49 +441,103 @@
                     <a href="{{ route('admin.reports.index') }}" class="nav-link-custom {{ request()->is('admin/reports*') ? 'active' : '' }}">
                         <i class="bi bi-graph-up"></i> Reports
                     </a>
+                    <a href="{{ route('admin.dividends.index') }}" class="nav-link-custom {{ request()->is('admin/dividends*') ? 'active' : '' }}">
+                        <i class="bi bi-pie-chart-fill"></i> Dividends
+                    </a>
+                    <a href="{{ route('admin.fines.index') }}" class="nav-link-custom {{ request()->is('admin/fines*') ? 'active' : '' }}">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Penalties & Fines
+                    </a>
                 @endif
-
-                <a href="{{ route('profile.edit') }}" class="nav-link-custom {{ request()->is('profile*') ? 'active' : '' }}">
-                    <i class="bi bi-person-circle"></i> My Profile
-                </a>
             </div>
 
-            <!-- Bottom section -->
-            <div class="p-3 mt-auto border-top border-white border-opacity-10">
-
-                <!-- Dark Mode Toggle -->
-                <button class="dark-mode-toggle mb-2" id="darkModeToggle">
-                    <i class="bi bi-moon-stars-fill" id="darkModeIcon"></i>
-                    <span id="darkModeLabel">Dark Mode</span>
-                    <div class="toggle-track" id="toggleTrack">
-                        <div class="toggle-thumb"></div>
-                    </div>
-                </button>
-
-                <!-- User info pill -->
-                <div class="d-flex align-items-center px-3 py-2 mb-2 rounded-3" style="background: var(--sidebar-user-bg);">
-                    @if(auth()->user()->profile_picture)
-                        <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="{{ auth()->user()->name }}" class="me-2" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-                    @else
-                        <i class="bi bi-person-circle fs-5 me-2 text-white"></i>
-                    @endif
-                    <div class="text-truncate" style="min-width:0;">
-                        <strong class="d-block text-white small">{{ auth()->user()->name }}</strong>
-                        <span class="text-white-50 small text-capitalize">{{ auth()->user()->role }}</span>
-                    </div>
-                </div>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="btn w-100 text-start nav-link-custom border-0 bg-transparent py-2">
-                        <i class="bi bi-box-arrow-right"></i> Logout
-                    </button>
-                </form>
-            </div>
         </div>
 
         <!-- ── Main Content ── -->
-        <div class="main-content flex-grow-1 fade-in-up">
+        <div class="main-content flex-grow-1" style="display: flex; flex-direction: column;">
+
+            <!-- ── Top Navbar ── -->
+            <div class="top-navbar d-none d-lg-flex align-items-center justify-content-between px-4 py-2 border-bottom" style="background: var(--bg-card); position: sticky; top: 0; z-index: 1020; min-height: 60px;">
+                <!-- Page breadcrumb / title area -->
+                <div class="d-flex align-items-center gap-3">
+                    <div class="chama-logo-container" style="width: 26px; height: 26px; margin-right: -4px; box-shadow: none;">
+                        <i class="bi bi-infinity chama-logo-icon" style="font-size: 0.95rem;"></i>
+                    </div>
+                    <span class="text-muted small fw-semibold">ChamaHub Portal</span>
+                </div>
+
+                <!-- Right-hand controls -->
+                <div class="d-flex align-items-center gap-3">
+
+                    <!-- Dark Mode Toggle -->
+                    <button id="darkModeToggle" class="navbar-icon-btn d-flex align-items-center gap-2" title="Toggle dark mode"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 50px; padding: 8px 16px; font-size: 0.82rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(102,126,234,0.4); transition: all 0.3s ease; letter-spacing: 0.3px;">
+                        <i class="bi bi-moon-stars-fill" id="darkModeIcon" style="font-size: 1rem;"></i>
+                        <span id="darkModeLabel">Dark Mode</span>
+                    </button>
+
+                    <!-- Notifications Bell -->
+                    @php $unreadCount = \App\Models\Notification::where('user_id', auth()->id())->where('is_read', false)->count(); @endphp
+                    <a href="{{ route('notifications.index') }}" class="navbar-icon-btn position-relative d-flex align-items-center justify-content-center" title="Notifications"
+                        style="width: 40px; height: 40px; border-radius: 50%; background: {{ $unreadCount > 0 ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #f1f5f9, #e2e8f0)' }}; color: {{ $unreadCount > 0 ? 'white' : '#64748b' }}; text-decoration: none; box-shadow: {{ $unreadCount > 0 ? '0 4px 12px rgba(239,68,68,0.45)' : '0 2px 8px rgba(0,0,0,0.08)' }}; transition: all 0.3s ease; border: none; font-size: 1rem;">
+                        <i class="bi bi-bell-fill"></i>
+                        @if($unreadCount > 0)
+                            <span style="position: absolute; top: -3px; right: -3px; background: #fbbf24; color: #1e293b; border-radius: 50%; width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">{{ $unreadCount > 9 ? '9+' : $unreadCount }}</span>
+                        @endif
+                    </a>
+
+                    <!-- User dropdown -->
+                    <div class="dropdown">
+                        <button class="d-flex align-items-center gap-2 border-0 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                            style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; border-radius: 50px; padding: 6px 14px 6px 6px; cursor: pointer; box-shadow: 0 4px 14px rgba(79,70,229,0.45); transition: all 0.3s ease;">
+                            @if(auth()->user()->profile_picture)
+                                <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="avatar"
+                                    style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.5);">
+                            @else
+                                <div style="width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; border: 2px solid rgba(255,255,255,0.4);">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <div class="text-start d-none d-xl-block" style="line-height: 1.2;">
+                                <div style="font-size: 0.82rem; font-weight: 700;">{{ auth()->user()->name }}</div>
+                                <div style="font-size: 0.7rem; opacity: 0.75; text-transform: capitalize;">{{ auth()->user()->role }}</div>
+                            </div>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 rounded-4 mt-2 p-2 shadow-lg" style="min-width: 220px; background: var(--bg-card);">
+                            <li class="px-3 py-2 mb-1">
+                                <div class="d-flex align-items-center gap-2">
+                                    @if(auth()->user()->profile_picture)
+                                        <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="avatar" style="width:38px; height:38px; border-radius:50%; object-fit:cover;">
+                                    @else
+                                        <div style="width:38px; height:38px; border-radius:50%; background: var(--primary-gradient); color: white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem;">
+                                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <p class="mb-0 fw-bold small" style="color: var(--text-heading);">{{ auth()->user()->name }}</p>
+                                        <p class="mb-0 text-capitalize" style="font-size: 0.72rem; color: var(--text-muted);">{{ auth()->user()->role }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><hr class="dropdown-divider my-1" style="border-color: var(--border-color);"></li>
+                            <li>
+                                <a class="dropdown-item rounded-3 py-2 d-flex align-items-center gap-2" href="{{ route('profile.edit') }}" style="color: var(--text-primary);">
+                                    <i class="bi bi-person-circle text-primary"></i> My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item rounded-3 py-2 d-flex align-items-center gap-2 text-danger">
+                                        <i class="bi bi-box-arrow-right"></i> Sign Out
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 flex-grow-1 fade-in-up">
 
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show shadow-sm border-0"
@@ -425,7 +556,8 @@
             @endif
 
             @yield('content')
-        </div>
+            </div><!-- /inner content -->
+        </div><!-- /main-content -->
     </div>
 
     @stack('modals')
@@ -445,7 +577,7 @@
 
             function applyDarkUI(isDark) {
                 if (icon)       icon.className      = isDark ? 'bi bi-sun-fill'        : 'bi bi-moon-stars-fill';
-                if (label)      label.textContent    = isDark ? 'Light Mode'            : 'Dark Mode';
+                if (label)      label.textContent    = isDark ? 'Light'                 : 'Dark';
                 if (track)      track.classList.toggle('on', isDark);
                 if (mobileIcon) mobileIcon.className = isDark ? 'bi bi-sun-fill'        : 'bi bi-moon-stars-fill';
             }
@@ -477,6 +609,17 @@
             closeSidebarBtn?.addEventListener('click', toggleSidebar);
             backdrop?.addEventListener('click', toggleSidebar);
         });
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
     </script>
     @stack('scripts')
 </body>

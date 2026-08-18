@@ -84,6 +84,40 @@ class MeetingController extends Controller
     }
 
     /**
+     * Display the specified meeting and its attendance.
+     */
+    public function show($id)
+    {
+        $meeting = Meeting::findOrFail($id);
+        $users = \App\Models\User::whereIn('role', ['member', 'admin'])->get();
+        $attendances = \App\Models\MeetingAttendance::where('meeting_id', $id)->get()->keyBy('user_id');
+        
+        return view('admin.meetings.show', compact('meeting', 'users', 'attendances'));
+    }
+
+    /**
+     * Save meeting attendance.
+     */
+    public function saveAttendance(Request $request, $id)
+    {
+        $meeting = Meeting::findOrFail($id);
+        
+        $request->validate([
+            'attendance' => 'required|array',
+            'attendance.*' => 'in:present,absent,apology',
+        ]);
+
+        foreach ($request->attendance as $userId => $status) {
+            \App\Models\MeetingAttendance::updateOrCreate(
+                ['meeting_id' => $meeting->id, 'user_id' => $userId],
+                ['status' => $status]
+            );
+        }
+
+        return redirect()->route('admin.meetings.show', $meeting->id)->with('success', 'Attendance saved successfully.');
+    }
+
+    /**
      * Remove the specified meeting from storage.
      */
     public function destroy($id)

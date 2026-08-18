@@ -1,9 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Loans Management</h2>
-    <a href="{{ route('admin.loans.create') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> New Loan Application</a>
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="mb-0">Loans Management</h2>
+    <div class="page-header-actions">
+        <a href="{{ route('admin.loans.create') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> <span class="d-none d-sm-inline">New Loan Application</span><span class="d-sm-none">New Loan</span></a>
+    </div>
 </div>
 
 <div class="card shadow-sm">

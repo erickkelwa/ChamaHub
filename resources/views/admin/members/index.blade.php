@@ -1,9 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Members Management</h2>
-    <a href="{{ route('admin.members.create') }}" class="btn btn-primary"><i class="bi bi-person-plus"></i> Add New Member</a>
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="mb-0">Members Management</h2>
+    <div class="page-header-actions">
+        <a href="{{ route('admin.members.create') }}" class="btn btn-primary"><i class="bi bi-person-plus"></i> <span class="d-none d-sm-inline">Add New Member</span><span class="d-sm-none">Add Member</span></a>
+    </div>
 </div>
 
 <div class="card shadow-sm">
@@ -50,13 +52,15 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('admin.members.show', $member->id) }}" class="btn btn-sm btn-outline-info me-1" title="View Profile & Savings History"><i class="bi bi-eye"></i> Details</a>
-                                <a href="{{ route('admin.members.edit', $member->id) }}" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></a>
-                                <form action="{{ route('admin.members.destroy', $member->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this member?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </form>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <a href="{{ route('admin.members.show', $member->id) }}" class="btn btn-sm btn-outline-info" title="View Profile & Savings History"><i class="bi bi-eye"></i><span class="d-none d-lg-inline"> Details</span></a>
+                                    <a href="{{ route('admin.members.edit', $member->id) }}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <form action="{{ route('admin.members.destroy', $member->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this member?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
