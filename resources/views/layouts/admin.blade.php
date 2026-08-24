@@ -77,11 +77,16 @@
         ============================================================ */
         *, *::before, *::after { box-sizing: border-box; }
 
+        html, body {
+            overflow-x: hidden;
+            width: 100vw;
+            max-width: 100%;
+        }
+
         body {
             background-color: var(--bg-body);
             font-family: 'Outfit', sans-serif;
             color: var(--text-primary);
-            overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -248,7 +253,13 @@
         @media (max-width: 991.98px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.show { transform: translateX(0); }
-            .main-content { margin-left: 0 !important; padding: 0.75rem !important; }
+            .main-content { 
+                margin-left: 0 !important; 
+                padding: 0.75rem !important; 
+                width: 100%; 
+                max-width: 100vw; 
+                overflow-x: hidden;
+            }
             /* Tighten inner content padding on small screens */
             .main-content .p-4 { padding: 0.75rem !important; }
             /* Shrink oversized headings on mobile */
