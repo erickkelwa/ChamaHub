@@ -47,8 +47,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($e instanceof TokenMismatchException) {
-            return redirect()->route('login')
-                ->withErrors(['session' => 'Your session expired. Please sign in again.']);
+            return redirect('/');
         }
 
         return parent::render($request, $e);

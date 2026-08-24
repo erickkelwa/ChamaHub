@@ -53,10 +53,11 @@ Route::middleware('auth')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
-
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->name('logout');
-
-    // GET fallback: lets users navigate to /logout directly in the browser
-    Route::get('logout', [AuthenticatedSessionController::class, 'destroy']);
 });
+
+Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('logout');
+
+// GET fallback: lets users navigate or click /logout directly in browser
+Route::get('logout', [AuthenticatedSessionController::class, 'destroy']);
+

@@ -48,15 +48,16 @@
             --border-color: #334155;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html { scroll-behavior: smooth; }
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
 
         body {
             font-family: 'Outfit', sans-serif;
             color: var(--text);
             background: var(--bg-body);
-            overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
         }
 
@@ -656,8 +657,19 @@
         footer strong { color: white; }
 
         /* ─── RESPONSIVE ─── */
+        html, body {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        #home, #features, #how-it-works, #about, #testimonials, #contact, footer, nav {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
         @media (max-width: 992px) {
-            #home { flex-direction: column; padding-top: 10rem; }
+            #home { flex-direction: column; padding-top: 8rem; padding-bottom: 4rem; }
             .hero-visual { display: none; }
             .hero-content { max-width: 100%; text-align: center; }
             .hero-stats { justify-content: center; }
@@ -665,9 +677,39 @@
         }
 
         @media (max-width: 768px) {
+            nav { padding: 0.75rem 4% !important; }
+            .nav-logo-text { font-size: 1.1rem !important; }
+            .nav-logo-icon { width: 34px !important; height: 34px !important; font-size: 1rem !important; }
             .nav-links { display: none; }
-            .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .nav-cta { gap: 0.4rem !important; }
+            .btn-ghost, .btn-solid { padding: 0.45rem 0.75rem !important; font-size: 0.82rem !important; }
+            
+            .hero-badge {
+                font-size: 0.75rem !important;
+                padding: 0.4rem 0.75rem !important;
+                max-width: 100% !important;
+                white-space: normal !important;
+                text-align: center !important;
+                display: inline-flex !important;
+            }
+
+            .hero-title { font-size: 2.1rem !important; }
+            .hero-sub { font-size: 0.95rem !important; margin-bottom: 2rem !important; }
+            .btn-hero-primary, .btn-hero-secondary { padding: 0.75rem 1.25rem !important; font-size: 0.9rem !important; }
+
+            .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            .about-stat-grid { grid-template-columns: 1fr !important; }
+            .features-grid { grid-template-columns: 1fr !important; }
+            .testimonials-grid { grid-template-columns: 1fr !important; }
+            .steps-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+            .feature-card, .testimonial-card { padding: 1.5rem !important; }
             .hero-stats { gap: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .nav-logo-text { font-size: 0.95rem !important; }
+            .btn-ghost, .btn-solid { padding: 0.35rem 0.6rem !important; font-size: 0.75rem !important; }
+            .btn-cta { padding: 0.85rem 1.5rem !important; font-size: 0.9rem !important; }
         }
     </style>
 </head>
@@ -695,7 +737,11 @@
 
     <div class="nav-cta">
         @auth
-            <a href="{{ url('/dashboard') }}" class="btn-solid">Go to Dashboard</a>
+            <a href="{{ url('/dashboard') }}" class="btn-solid">Dashboard</a>
+            <form method="POST" action="{{ route('logout') }}" style="display:inline-block; margin:0;">
+                @csrf
+                <button type="submit" class="btn-ghost" style="font-family:inherit; cursor:pointer; padding:0.55rem 1rem; border-radius:8px;">Sign Out</button>
+            </form>
         @else
             <a href="{{ route('login') }}" class="btn-ghost">Login</a>
             <a href="{{ route('register') }}" class="btn-solid">Get Started</a>
@@ -730,14 +776,20 @@
                 <a href="{{ url('/dashboard') }}" class="btn-hero-primary">
                     <i class="bi bi-speedometer2"></i> Go to Dashboard
                 </a>
+                <form method="POST" action="{{ route('logout') }}" style="display:inline-block;">
+                    @csrf
+                    <button type="submit" class="btn-hero-secondary" style="border:none; cursor:pointer; font-family:inherit;">
+                        <i class="bi bi-box-arrow-right"></i> Sign Out
+                    </button>
+                </form>
             @else
                 <a href="{{ route('register') }}" class="btn-hero-primary">
                     <i class="bi bi-rocket-takeoff-fill"></i> Start for Free
                 </a>
+                <a href="#features" class="btn-hero-secondary">
+                    <i class="bi bi-play-circle-fill"></i> Learn More
+                </a>
             @endauth
-            <a href="#features" class="btn-hero-secondary">
-                <i class="bi bi-play-circle-fill"></i> Learn More
-            </a>
         </div>
 
         <div class="hero-stats">

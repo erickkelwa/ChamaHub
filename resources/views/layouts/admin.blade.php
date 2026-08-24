@@ -79,7 +79,7 @@
 
         html, body {
             overflow-x: hidden;
-            width: 100vw;
+            width: 100%;
             max-width: 100%;
         }
 
@@ -257,7 +257,7 @@
                 margin-left: 0 !important; 
                 padding: 0.75rem !important; 
                 width: 100%; 
-                max-width: 100vw; 
+                max-width: 100%; 
                 overflow-x: hidden;
             }
             /* Tighten inner content padding on small screens */
@@ -461,6 +461,16 @@
                 @endif
             </div>
 
+            <!-- Sidebar Footer Sign Out button for mobile & desktop -->
+            <div class="p-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+                <form method="POST" action="{{ route('logout') }}" id="sidebar-logout-form">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-danger w-full d-flex align-items-center justify-content-center gap-2 rounded-3 text-white border-white-50 w-100 py-2" style="font-size: 0.9rem; font-weight: 600;">
+                        <i class="bi bi-box-arrow-right"></i> Sign Out
+                    </button>
+                </form>
+            </div>
+
         </div>
 
         <!-- ── Main Content ── -->
@@ -536,7 +546,10 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item rounded-3 py-2 d-flex align-items-center gap-2 text-danger" href="/logout">
+                                <form method="POST" action="{{ route('logout') }}" id="header-logout-form" class="d-none">
+                                    @csrf
+                                </form>
+                                <a class="dropdown-item rounded-3 py-2 d-flex align-items-center gap-2 text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('header-logout-form').submit();">
                                     <i class="bi bi-box-arrow-right"></i> Sign Out
                                 </a>
                             </li>
