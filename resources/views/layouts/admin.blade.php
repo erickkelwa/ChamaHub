@@ -525,12 +525,9 @@
                                 </a>
                             </li>
                             <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item rounded-3 py-2 d-flex align-items-center gap-2 text-danger">
-                                        <i class="bi bi-box-arrow-right"></i> Sign Out
-                                    </button>
-                                </form>
+                                <a class="dropdown-item rounded-3 py-2 d-flex align-items-center gap-2 text-danger" href="/logout">
+                                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                                </a>
                             </li>
                         </ul>
                     </div>
