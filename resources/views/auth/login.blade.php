@@ -312,6 +312,13 @@
         <div class="auth-card">
             <p class="auth-card-title">Welcome back! Sign in to continue</p>
 
+            @if($errors->has('session'))
+                <div style="background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; color: #fca5a5; font-size: 0.88rem; display:flex; align-items:center; gap:8px;">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    {{ $errors->first('session') }}
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
