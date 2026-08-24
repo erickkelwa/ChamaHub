@@ -23,7 +23,9 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 40px 0;
         }
 
         /* ── Animated Background Orbs (same as landing page) ── */

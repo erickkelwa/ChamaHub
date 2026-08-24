@@ -6,6 +6,23 @@ echo "=== Running Laravel deployment script ==="
 
 cd /var/www/html
 
+# --- Parse DATABASE_URL if provided by Render ---
+# Render PostgreSQL databases expose a DATABASE_URL like:
+# postgresql://user:pass@host:port/dbname
+if [ -n "$DATABASE_URL" ]; then
+    echo "--- Parsing DATABASE_URL for PostgreSQL ---"
+    # Strip the scheme
+    DB_URL_STRIPPED="${DATABASE_URL#*://}"
+    DB_USERNAME=$(echo "$DB_URL_STRIPPED" | cut -d: -f1)
+    DB_PASSWORD=$(echo "$DB_URL_STRIPPED" | cut -d@ -f1 | cut -d: -f2)
+    DB_HOST=$(echo "$DB_URL_STRIPPED" | cut -d@ -f2 | cut -d: -f1)
+    DB_PORT=$(echo "$DB_URL_STRIPPED" | cut -d@ -f2 | cut -d: -f2 | cut -d/ -f1)
+    DB_DATABASE=$(echo "$DB_URL_STRIPPED" | cut -d/ -f2 | cut -d? -f1)
+    export DB_CONNECTION=pgsql
+    export DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD
+    echo "    DB_HOST=$DB_HOST  DB_PORT=$DB_PORT  DB_DATABASE=$DB_DATABASE"
+fi
+
 echo "--- Ensuring storage directories exist ---"
 mkdir -p storage/framework/sessions
 mkdir -p storage/framework/views
