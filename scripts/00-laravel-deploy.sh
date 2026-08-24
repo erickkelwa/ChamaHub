@@ -29,7 +29,7 @@ mkdir -p storage/framework/views
 mkdir -p storage/framework/cache/data
 mkdir -p storage/logs
 mkdir -p bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+chmod -R 777 storage bootstrap/cache
 
 echo "--- Clearing ALL caches ---"
 php artisan optimize:clear || true

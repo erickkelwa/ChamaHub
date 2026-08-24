@@ -32,8 +32,8 @@ RUN rm -f /var/www/html/bootstrap/cache/routes-v7.php \
     /var/www/html/storage/framework/cache/data \
     /var/www/html/storage/logs \
     /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
+    && chmod -R 777 /var/www/html/storage \
+    && chmod -R 777 /var/www/html/bootstrap/cache
 
 # Copy and enable the startup script
 COPY scripts/00-laravel-deploy.sh /var/www/html/scripts/00-laravel-deploy.sh
