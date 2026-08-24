@@ -56,4 +56,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+
+    // GET fallback: lets users navigate to /logout directly in the browser
+    Route::get('logout', [AuthenticatedSessionController::class, 'destroy']);
 });
