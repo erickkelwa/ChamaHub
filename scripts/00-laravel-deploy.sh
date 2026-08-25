@@ -37,8 +37,8 @@ php artisan optimize:clear || true
 echo "--- Running migrations ---"
 php artisan migrate --force
 
-echo "--- Seeding admin user ---"
-php artisan db:seed --class=AdminSeeder --force || true
+echo "--- Seeding demo members & data ---"
+php artisan db:seed --class=DemoSeeder --force || true
 
 echo "--- Caching config and views only ---"
 php artisan config:cache
