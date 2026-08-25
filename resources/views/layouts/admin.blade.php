@@ -255,10 +255,12 @@
             .sidebar.show { transform: translateX(0); }
             .main-content { 
                 margin-left: 0 !important; 
-                padding: 0.75rem !important; 
-                width: 100%; 
-                max-width: 100%; 
+                padding: 1rem !important; 
+                width: 100% !important; 
+                max-width: 100% !important; 
+                min-width: 0 !important;
                 overflow-x: hidden;
+                box-sizing: border-box;
             }
             /* Tighten inner content padding on small screens */
             .main-content .p-4 { padding: 0.75rem !important; }
@@ -277,10 +279,51 @@
             .page-header-actions .btn { width: 100%; justify-content: center; }
         }
 
-        /* Desktop: fixed sidebar, push content */
+        /* Desktop: fixed sidebar, push content cleanly without horizontal overflow */
         @media (min-width: 992px) {
-            .main-content { margin-left: var(--sidebar-width); padding: 2rem 2.5rem; min-height: 100vh; }
+            .main-content { 
+                margin-left: var(--sidebar-width) !important; 
+                width: calc(100% - var(--sidebar-width)) !important;
+                max-width: calc(100% - var(--sidebar-width)) !important;
+                min-width: 0 !important;
+                padding: 2rem 2.5rem; 
+                min-height: 100vh;
+                box-sizing: border-box;
+            }
             .mobile-header { display: none !important; }
+        }
+
+        /* Custom sleek scrollbar for sidebar */
+        .sidebar-nav-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar-nav-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-nav-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 10px;
+        }
+        .sidebar-nav-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.45);
+        }
+
+        /* Custom sleek scrollbar for responsive tables */
+        .table-responsive {
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 12px;
+        }
+        .table-responsive::-webkit-scrollbar {
+            height: 6px;
+        }
+        .table-responsive::-webkit-scrollbar-track {
+            background: var(--bg-table-stripe);
+        }
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: var(--input-border);
+            border-radius: 4px;
         }
 
         .sidebar-header {
@@ -423,7 +466,7 @@
                 </button>
             </div>
 
-            <div class="mt-3 flex-grow-1" style="overflow-y:auto; overflow-x:hidden; min-height:0;">
+            <div class="mt-3 flex-grow-1 sidebar-nav-scroll" style="overflow-y:auto; overflow-x:hidden; min-height:0;">
                 <a href="/dashboard" class="nav-link-custom {{ request()->is('dashboard*') ? 'active' : '' }}">
                     <i class="bi bi-grid-1x2-fill"></i> Dashboard
                 </a>
@@ -445,9 +488,6 @@
                     </a>
                     <a href="{{ route('admin.loans.index') }}" class="nav-link-custom {{ request()->is('admin/loans*') ? 'active' : '' }}">
                         <i class="bi bi-bank2"></i> Loans
-                    </a>
-                    <a href="{{ route('admin.meetings.index') }}" class="nav-link-custom {{ request()->is('admin/meetings*') ? 'active' : '' }}">
-                        <i class="bi bi-calendar-event-fill"></i> Meetings
                     </a>
                     <a href="{{ route('admin.reports.index') }}" class="nav-link-custom {{ request()->is('admin/reports*') ? 'active' : '' }}">
                         <i class="bi bi-graph-up"></i> Reports
