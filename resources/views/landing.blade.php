@@ -184,9 +184,33 @@
             50% { transform: scale(1.15); opacity: 0.45; }
         }
 
+        /* ─── SUBTLE HERO BACKGROUND VIDEO ─── */
+        .hero-video-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-video-bg video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.22; /* Subtle opacity for high readability */
+            filter: brightness(0.75) contrast(1.15) saturate(1.2);
+        }
+
+        .hero-video-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(15,14,23,0.85) 0%, rgba(30,27,75,0.72) 40%, rgba(49,46,129,0.7) 70%, rgba(79,70,229,0.82) 100%);
+            z-index: 2;
+        }
+
         .hero-content {
             position: relative;
-            z-index: 2;
+            z-index: 3;
             max-width: 650px;
             flex: 1;
         }
@@ -194,7 +218,7 @@
         .hero-visual {
             flex: 1;
             position: relative;
-            z-index: 2;
+            z-index: 3;
             height: 500px;
             display: flex;
             justify-content: center;
@@ -751,6 +775,15 @@
 
 <!-- ─── HERO ─── -->
 <section id="home">
+    <!-- Subtle Background Video (People sharing money / Chama financial growth) -->
+    <div class="hero-video-bg">
+        <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1920&q=80">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-counting-and-sharing-money-42880-large.mp4" type="video/mp4">
+            <source src="https://cdn.coverr.co/videos/coverr-hands-counting-money-5271/1080p.mp4" type="video/mp4">
+        </video>
+        <div class="hero-video-overlay"></div>
+    </div>
+
     <div class="hero-orb orb1"></div>
     <div class="hero-orb orb2"></div>
     <div class="hero-orb orb3"></div>
