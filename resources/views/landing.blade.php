@@ -184,7 +184,7 @@
             50% { transform: scale(1.15); opacity: 0.45; }
         }
 
-        /* ─── SUBTLE HERO BACKGROUND VIDEO ─── */
+        /* ─── ANIMATED MONEY CANVAS BACKGROUND ─── */
         .hero-video-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -193,18 +193,16 @@
             pointer-events: none;
         }
 
-        .hero-video-bg video {
+        #hero-canvas {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            opacity: 0.22; /* Subtle opacity for high readability */
-            filter: brightness(0.75) contrast(1.15) saturate(1.2);
+            display: block;
         }
 
         .hero-video-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(160deg, rgba(15,14,23,0.85) 0%, rgba(30,27,75,0.72) 40%, rgba(49,46,129,0.7) 70%, rgba(79,70,229,0.82) 100%);
+            background: linear-gradient(160deg, rgba(15,14,23,0.82) 0%, rgba(30,27,75,0.7) 40%, rgba(49,46,129,0.67) 70%, rgba(79,70,229,0.78) 100%);
             z-index: 2;
         }
 
@@ -775,12 +773,9 @@
 
 <!-- ─── HERO ─── -->
 <section id="home">
-    <!-- Subtle Background Video (People sharing money / Chama financial growth) -->
+    <!-- Animated Money Canvas Background -->
     <div class="hero-video-bg">
-        <video autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1920&q=80">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-counting-and-sharing-money-42880-large.mp4" type="video/mp4">
-            <source src="https://cdn.coverr.co/videos/coverr-hands-counting-money-5271/1080p.mp4" type="video/mp4">
-        </video>
+        <canvas id="hero-canvas"></canvas>
         <div class="hero-video-overlay"></div>
     </div>
 
@@ -1125,5 +1120,145 @@
             });
         }
     </script>
+
+    <!-- ═══ HERO MONEY CANVAS ANIMATION ═══ -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('hero-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width  = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // ── Particle types: coins, bills, and arrows ──
+        const SYMBOLS = ['KSh', '$', '₦', '💴', '↑', '▲', '◆', '●'];
+        const COLORS  = [
+            'rgba(253,230,138,0.55)',  // gold
+            'rgba(167,243,208,0.45)',  // green
+            'rgba(196,181,253,0.45)',  // purple
+            'rgba(255,255,255,0.3)',   // white
+            'rgba(251,191,36,0.5)',    // amber
+        ];
+
+        class Particle {
+            constructor() { this.reset(true); }
+            reset(initial = false) {
+                this.x    = Math.random() * canvas.width;
+                this.y    = initial ? Math.random() * canvas.height : canvas.height + 20;
+                this.vy   = -(0.3 + Math.random() * 0.9);   // drift upward
+                this.vx   = (Math.random() - 0.5) * 0.4;    // slight horizontal drift
+                this.size = 10 + Math.random() * 20;
+                this.symbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+                this.color  = COLORS[Math.floor(Math.random() * COLORS.length)];
+                this.alpha  = 0.08 + Math.random() * 0.35;
+                this.rot    = (Math.random() - 0.5) * 0.04; // slow rotation
+                this.angle  = Math.random() * Math.PI * 2;
+                this.life   = 0;
+                this.maxLife = 200 + Math.random() * 400;
+            }
+            update() {
+                this.x    += this.vx;
+                this.y    += this.vy;
+                this.angle += this.rot;
+                this.life++;
+                if (this.y < -30 || this.life > this.maxLife) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                // Fade in / fade out
+                const fade = Math.min(this.life / 40, 1) * Math.min((this.maxLife - this.life) / 40, 1);
+                ctx.globalAlpha = this.alpha * fade;
+                ctx.fillStyle   = this.color;
+                ctx.font        = `bold ${this.size}px 'Inter', sans-serif`;
+                ctx.textAlign   = 'center';
+                ctx.textBaseline= 'middle';
+                ctx.fillText(this.symbol, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        // ── Two animated "hands" passing a coin between them ──
+        class CoinPass {
+            constructor() { this.reset(); }
+            reset() {
+                this.t      = 0;
+                this.speed  = 0.003 + Math.random() * 0.002;
+                this.y      = canvas.height * (0.3 + Math.random() * 0.45);
+                this.x1     = canvas.width  * (0.05 + Math.random() * 0.2);
+                this.x2     = this.x1 + canvas.width * (0.22 + Math.random() * 0.18);
+                this.coinR  = 18 + Math.random() * 14;
+                this.alpha  = 0.18 + Math.random() * 0.22;
+            }
+            update() {
+                this.t += this.speed;
+                if (this.t > 1.05) this.reset();
+            }
+            draw() {
+                if (this.t > 1) return;
+                const cx = this.x1 + (this.x2 - this.x1) * this.t;
+                const cy = this.y + Math.sin(this.t * Math.PI) * -30; // arc upward
+
+                // Left hand (open palm shape)
+                ctx.save();
+                ctx.globalAlpha = this.alpha * Math.min(this.t / 0.1, 1) * Math.min((1 - this.t) / 0.1, 1);
+                this._drawHand(this.x1 - 5, this.y, 1);
+                this._drawHand(this.x2 + 5, this.y, -1);
+
+                // Coin
+                const grad = ctx.createRadialGradient(cx - 4, cy - 4, 2, cx, cy, this.coinR);
+                grad.addColorStop(0, 'rgba(253,230,138,0.9)');
+                grad.addColorStop(0.5, 'rgba(251,191,36,0.7)');
+                grad.addColorStop(1, 'rgba(180,130,0,0.5)');
+                ctx.beginPath();
+                ctx.arc(cx, cy, this.coinR, 0, Math.PI * 2);
+                ctx.fillStyle = grad;
+                ctx.fill();
+                // KSh text on coin
+                ctx.fillStyle = 'rgba(120,80,0,0.85)';
+                ctx.font = `bold ${this.coinR * 0.7}px sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('KSh', cx, cy);
+                ctx.restore();
+            }
+            _drawHand(x, y, dir) {
+                // Simple rounded oval "palm"
+                ctx.save();
+                ctx.fillStyle = 'rgba(220,150,100,0.35)';
+                ctx.beginPath();
+                ctx.ellipse(x + dir * 20, y + 12, 22, 12, dir * 0.3, 0, Math.PI * 2);
+                ctx.fill();
+                // fingers (3 short rects)
+                for (let i = -1; i <= 1; i++) {
+                    ctx.beginPath();
+                    ctx.ellipse(x + dir * 20 + i * 8, y - 4, 5, 12, 0.1 * i, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        const NUM_PARTICLES = 55;
+        const NUM_COINPASSES = 3;
+        const particles  = Array.from({length: NUM_PARTICLES},  () => new Particle());
+        const coinPasses = Array.from({length: NUM_COINPASSES}, () => { const c = new CoinPass(); c.t = Math.random(); return c; });
+
+        function loop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            coinPasses.forEach(c => { c.update(); c.draw(); });
+            requestAnimationFrame(loop);
+        }
+        loop();
+    })();
+    </script>
+
 </body>
 </html>
