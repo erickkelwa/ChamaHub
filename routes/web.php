@@ -100,6 +100,12 @@ Route::middleware('auth')->group(function () {
         
         // Automated Schedule Generator
         Route::post('admin/contributions/generate-schedule', [\App\Http\Controllers\Admin\ContributionController::class, 'generateSchedule'])->name('admin.contributions.generate-schedule');
+
+        // Seed Demo Members Action
+        Route::post('admin/seed-demo', function () {
+            \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'DemoSeeder', '--force' => true]);
+            return redirect()->back()->with('success', '10 Demo members and financial data populated successfully!');
+        })->name('admin.seed-demo');
     });
 
     // M-Pesa STK Push initiation (authenticated)
@@ -107,7 +113,18 @@ Route::middleware('auth')->group(function () {
     Route::post('mpesa/deposit', [\App\Http\Controllers\MpesaController::class, 'initiateDeposit'])->name('mpesa.deposit');
 });
 
-// M-Pesa callback — must be public (Safaricom cannot authenticate)
-Route::post('mpesa/callback', [\App\Http\Controllers\MpesaController::class, 'callback'])->name('mpesa.callback');
+// 1-Click Public/Admin Demo Seeder Trigger
+Route::get('/seed-demo', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', [
+            '--class' => 'DemoSeeder',
+            '--force' => true
+        ]);
+        return redirect('/dashboard')->with('success', 'Demo members, contributions, loans, and meetings successfully populated!');
+    } catch (\Throwable $e) {
+        return redirect('/dashboard')->with('error', 'Seeding notice: ' . $e->getMessage());
+    }
+})->name('seed-demo');
 
 require __DIR__.'/auth.php';
+

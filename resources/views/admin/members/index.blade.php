@@ -3,7 +3,11 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <h2 class="mb-0">Members Management</h2>
-    <div class="page-header-actions">
+    <div class="page-header-actions d-flex gap-2">
+        <form action="{{ route('admin.seed-demo') }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-outline-success"><i class="bi bi-person-check-fill me-1"></i> Populate Demo Members</button>
+        </form>
         <a href="{{ route('admin.members.create') }}" class="btn btn-primary"><i class="bi bi-person-plus"></i> <span class="d-none d-sm-inline">Add New Member</span><span class="d-sm-none">Add Member</span></a>
     </div>
 </div>
