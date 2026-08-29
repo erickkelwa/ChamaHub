@@ -65,23 +65,24 @@ class DividendController extends Controller
         // Sort by highest contribution
         $memberDividends = $memberDividends->sortByDesc('total_contribution')->values();
 
-        // Get available years for the dropdown
+        // Get available years for the dropdown (database agnostic for MySQL & PostgreSQL)
         $availableYears = Contribution::whereNotNull('paid_at')
-                            ->selectRaw('YEAR(paid_at) as year')
-                            ->distinct()
-                            ->orderBy('year', 'desc')
-                            ->pluck('year')
+                            ->pluck('paid_at')
+                            ->map(function ($date) {
+                                return Carbon::parse($date)->format('Y');
+                            })
+                            ->unique()
+                            ->values()
                             ->toArray();
         
         // Ensure the currently selected year and current actual year are in the list
         if (!in_array(date('Y'), $availableYears)) {
             array_unshift($availableYears, date('Y'));
         }
-        if (!in_array($year, $availableYears)) {
-            $availableYears[] = $year;
+        if (!in_array((string)$year, $availableYears)) {
+            $availableYears[] = (string)$year;
         }
-        sort($availableYears);
-        $availableYears = array_reverse($availableYears);
+        rsort($availableYears);
 
         return view('admin.dividends.index', compact(
             'year',
