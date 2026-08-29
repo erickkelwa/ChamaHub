@@ -100,6 +100,7 @@ Route::middleware('auth')->group(function () {
         
         // Automated Schedule Generator
         Route::post('admin/contributions/generate-schedule', [\App\Http\Controllers\Admin\ContributionController::class, 'generateSchedule'])->name('admin.contributions.generate-schedule');
+        Route::post('admin/contributions/bulk-stk-push', [\App\Http\Controllers\Admin\ContributionController::class, 'bulkStkPush'])->name('admin.contributions.bulk-stk-push');
 
         // Seed Demo Members Action
         Route::post('admin/seed-demo', function () {
