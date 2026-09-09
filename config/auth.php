@@ -89,8 +89,8 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
+            'table' => 'password_resets',   // matches migration: 2014_10_12_100000_create_password_resets_table.php
+            'expire' => 120,                // 2 hours for user convenience
             'throttle' => 60,
         ],
     ],

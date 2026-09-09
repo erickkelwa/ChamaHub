@@ -2,8 +2,20 @@
 <html lang="en" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#4f46e5">
+    <!-- iOS / Android PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ChamaHub">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ChamaHub">
+    <meta name="msapplication-TileColor" content="#4f46e5">
+    <meta name="msapplication-TileImage" content="/icons/icon-144.png">
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png">
+    <link rel="apple-touch-startup-image" href="/icons/icon-512.png">
     <link rel="manifest" href="/manifest.json">
     <title>ChamaHub - Admin & Member Portal</title>
     <!-- Favicon (Magnificent Aura Logo) -->
@@ -409,6 +421,197 @@
             to   { opacity: 1; transform: translateY(0); }
         }
         .fade-in-up { animation: fadeIn 0.5s ease-out forwards; }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           MOBILE BOTTOM NAVIGATION BAR
+        ═══════════════════════════════════════════════════════════════════ */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(64px + env(safe-area-inset-bottom));
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            z-index: 1025;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        html.dark-mode .bottom-nav {
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+        }
+        .bottom-nav-inner {
+            display: flex;
+            align-items: stretch;
+            justify-content: space-around;
+            height: 64px;
+        }
+        .bottom-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            font-weight: 500;
+            padding: 0 4px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+            min-height: 48px; /* WCAG touch target */
+        }
+        .bottom-nav-item i {
+            font-size: 1.3rem;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+        .bottom-nav-item.active,
+        .bottom-nav-item:hover {
+            color: #4f46e5;
+        }
+        .bottom-nav-item.active i {
+            transform: translateY(-2px);
+        }
+        .bottom-nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 3px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            border-radius: 0 0 4px 4px;
+        }
+        .bottom-nav-badge {
+            position: absolute;
+            top: 6px;
+            right: calc(50% - 18px);
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 17px;
+            height: 17px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-card);
+        }
+
+        /* Show bottom nav only on small screens */
+        @media (max-width: 991.98px) {
+            .bottom-nav { display: block; }
+            /* Add padding so content isn't hidden behind bottom nav */
+            .main-content {
+                padding-bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+            }
+        }
+
+        /* Safe-area insets for iPhone notch / home indicator */
+        .mobile-header {
+            padding-top: max(1rem, env(safe-area-inset-top));
+            padding-left: max(1.25rem, env(safe-area-inset-left));
+            padding-right: max(1.25rem, env(safe-area-inset-right));
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           PWA INSTALL BANNER
+        ═══════════════════════════════════════════════════════════════════ */
+        #pwa-install-banner {
+            display: none;
+            position: fixed;
+            bottom: calc(72px + env(safe-area-inset-bottom));
+            left: 1rem;
+            right: 1rem;
+            z-index: 2000;
+            animation: slideUpBanner 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        }
+        @keyframes slideUpBanner {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        #pwa-install-banner .banner-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 60%, #ec4899 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 1.1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 12px 40px rgba(79,70,229,0.45);
+        }
+        #pwa-install-banner .banner-logo {
+            width: 46px;
+            height: 46px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        #pwa-install-banner .banner-text { flex: 1; min-width: 0; }
+        #pwa-install-banner .banner-text strong { display: block; font-size: 0.95rem; font-weight: 700; }
+        #pwa-install-banner .banner-text span  { font-size: 0.78rem; opacity: 0.82; }
+        #pwa-install-banner .btn-install {
+            background: white;
+            color: #4f46e5;
+            border: none;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s ease;
+        }
+        #pwa-install-banner .btn-install:hover { transform: scale(1.05); }
+        #pwa-install-banner .btn-dismiss {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 0 0 0.25rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           PULL-TO-REFRESH INDICATOR
+        ═══════════════════════════════════════════════════════════════════ */
+        #ptr-indicator {
+            position: fixed;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            background: var(--bg-card);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border: 2px solid var(--border-color);
+            transition: top 0.15s ease;
+            pointer-events: none;
+        }
+        #ptr-indicator.visible { top: 12px; }
+        #ptr-indicator.refreshing i { animation: spinRefresh 0.8s linear infinite; }
+        @keyframes spinRefresh { to { transform: rotate(360deg); } }
     </style>
     @stack('styles')
 
@@ -443,6 +646,24 @@
             <span class="badge bg-white text-dark rounded-pill px-3 py-2 text-capitalize fw-bold shadow-sm">
                 {{ auth()->user()->role }}
             </span>
+        </div>
+    </div>
+
+    <!-- ── Pull-to-Refresh Indicator ── -->
+    <div id="ptr-indicator">
+        <i class="bi bi-arrow-clockwise" style="color: #4f46e5; font-size: 1.1rem;"></i>
+    </div>
+
+    <!-- ── PWA Install Banner ── -->
+    <div id="pwa-install-banner">
+        <div class="banner-card">
+            <div class="banner-logo">∞</div>
+            <div class="banner-text">
+                <strong>Install ChamaHub</strong>
+                <span>Add to Home Screen for the best experience</span>
+            </div>
+            <button class="btn-install" id="pwa-install-btn">Install</button>
+            <button class="btn-dismiss" id="pwa-dismiss-btn" aria-label="Dismiss">✕</button>
         </div>
     </div>
 
@@ -621,13 +842,95 @@
         </div><!-- /main-content -->
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════════════════
+         MOBILE BOTTOM NAVIGATION BAR (hidden on desktop via CSS)
+    ═══════════════════════════════════════════════════════════════════ -->
+    <nav class="bottom-nav" id="bottomNav" aria-label="Mobile navigation">
+        <div class="bottom-nav-inner">
+
+            <!-- Dashboard -->
+            <a href="/dashboard" id="bnav-home"
+               class="bottom-nav-item {{ request()->is('dashboard*') ? 'active' : '' }}">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Home</span>
+            </a>
+
+            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'treasurer')
+                <!-- Members (admin only) -->
+                <a href="{{ route('admin.members.index') }}" id="bnav-members"
+                   class="bottom-nav-item {{ request()->is('admin/members*') ? 'active' : '' }}">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Members</span>
+                </a>
+
+                <!-- Contributions -->
+                <a href="{{ route('admin.contributions.index') }}" id="bnav-savings"
+                   class="bottom-nav-item {{ request()->is('admin/contributions*') ? 'active' : '' }}">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Savings</span>
+                </a>
+
+                <!-- Loans -->
+                <a href="{{ route('admin.loans.index') }}" id="bnav-loans"
+                   class="bottom-nav-item {{ request()->is('admin/loans*') ? 'active' : '' }}">
+                    <i class="bi bi-bank2"></i>
+                    <span>Loans</span>
+                </a>
+
+                <!-- Reports -->
+                <a href="{{ route('admin.reports.index') }}" id="bnav-reports"
+                   class="bottom-nav-item {{ request()->is('admin/reports*') ? 'active' : '' }}">
+                    <i class="bi bi-graph-up"></i>
+                    <span>Reports</span>
+                </a>
+
+            @else
+                <!-- Member: Savings -->
+                <a href="{{ route('admin.contributions.index') }}" id="bnav-savings"
+                   class="bottom-nav-item {{ request()->is('admin/contributions*') ? 'active' : '' }}">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Savings</span>
+                </a>
+
+                <!-- Member: Loans -->
+                <a href="{{ route('admin.loans.index') }}" id="bnav-loans"
+                   class="bottom-nav-item {{ request()->is('admin/loans*') ? 'active' : '' }}">
+                    <i class="bi bi-bank2"></i>
+                    <span>Loans</span>
+                </a>
+
+                <!-- Member: Meetings -->
+                <a href="{{ route('admin.meetings.index') }}" id="bnav-meetings"
+                   class="bottom-nav-item {{ request()->is('admin/meetings*') ? 'active' : '' }}">
+                    <i class="bi bi-calendar-event-fill"></i>
+                    <span>Meetings</span>
+                </a>
+
+            @endif
+
+            <!-- Notifications (all roles) -->
+            @php $unreadBadge = \App\Models\Notification::where('user_id', auth()->id())->where('is_read', false)->count(); @endphp
+            <a href="{{ route('notifications.index') }}" id="bnav-notif"
+               class="bottom-nav-item {{ request()->is('notifications*') ? 'active' : '' }}">
+                <i class="bi bi-bell-fill"></i>
+                @if($unreadBadge > 0)
+                    <span class="bottom-nav-badge">{{ $unreadBadge > 9 ? '9+' : $unreadBadge }}</span>
+                @endif
+                <span>Alerts</span>
+            </a>
+
+        </div>
+    </nav>
+
     @stack('modals')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
-            // ── Dark Mode ──────────────────────────────────
+            // ═══════════════════════════════════════════════════════════════
+            //  DARK MODE
+            // ═══════════════════════════════════════════════════════════════
             const root       = document.getElementById('htmlRoot');
             const toggle     = document.getElementById('darkModeToggle');
             const icon       = document.getElementById('darkModeIcon');
@@ -649,37 +952,230 @@
                 applyDarkUI(isDark);
             }
 
-            // Sync UI to current state (may already be dark from inline script)
             applyDarkUI(root.classList.contains('dark-mode'));
-
             if (toggle)    toggle.addEventListener('click', toggleDark);
             if (mobileBtn) mobileBtn.addEventListener('click', toggleDark);
 
-            // ── Mobile Sidebar ─────────────────────────────
+            // ═══════════════════════════════════════════════════════════════
+            //  MOBILE SIDEBAR (open/close + swipe gesture)
+            // ═══════════════════════════════════════════════════════════════
             const sidebar         = document.getElementById('sidebar');
             const backdrop        = document.getElementById('sidebarBackdrop');
             const mobileMenuBtn   = document.getElementById('mobileMenuBtn');
             const closeSidebarBtn = document.getElementById('closeSidebarBtn');
 
-            function toggleSidebar() {
-                sidebar?.classList.toggle('show');
-                backdrop?.classList.toggle('show');
-            }
+            function openSidebar()  { sidebar?.classList.add('show');    backdrop?.classList.add('show'); }
+            function closeSidebar() { sidebar?.classList.remove('show'); backdrop?.classList.remove('show'); }
+            function toggleSidebar() { sidebar?.classList.contains('show') ? closeSidebar() : openSidebar(); }
 
             mobileMenuBtn?.addEventListener('click', toggleSidebar);
-            closeSidebarBtn?.addEventListener('click', toggleSidebar);
-            backdrop?.addEventListener('click', toggleSidebar);
+            closeSidebarBtn?.addEventListener('click', closeSidebar);
+            backdrop?.addEventListener('click', closeSidebar);
+
+            // Swipe-right to open, swipe-left to close sidebar
+            let touchStartX = null;
+            document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+            document.addEventListener('touchend', e => {
+                if (touchStartX === null) return;
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                touchStartX = null;
+                if (dx > 60  && !sidebar?.classList.contains('show')) openSidebar();
+                if (dx < -60 &&  sidebar?.classList.contains('show')) closeSidebar();
+            }, { passive: true });
+
+            // ═══════════════════════════════════════════════════════════════
+            //  PULL-TO-REFRESH
+            // ═══════════════════════════════════════════════════════════════
+            const ptrEl = document.getElementById('ptr-indicator');
+            let ptrStart = null, ptrActive = false;
+
+            window.addEventListener('touchstart', e => {
+                if (window.scrollY === 0) ptrStart = e.touches[0].clientY;
+            }, { passive: true });
+
+            window.addEventListener('touchmove', e => {
+                if (ptrStart === null) return;
+                const dy = e.touches[0].clientY - ptrStart;
+                if (dy > 50 && window.scrollY === 0) {
+                    ptrEl?.classList.add('visible');
+                    ptrActive = true;
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                if (ptrActive) {
+                    ptrEl?.classList.add('refreshing');
+                    setTimeout(() => window.location.reload(), 600);
+                }
+                ptrStart = null; ptrActive = false;
+            }, { passive: true });
+
+            // ═══════════════════════════════════════════════════════════════
+            //  PWA INSTALL BANNER
+            // ═══════════════════════════════════════════════════════════════
+            let deferredPrompt = null;
+            const installBanner  = document.getElementById('pwa-install-banner');
+            const installBtn     = document.getElementById('pwa-install-btn');
+            const dismissBtn     = document.getElementById('pwa-dismiss-btn');
+            const DISMISS_KEY    = 'chamahub_pwa_dismissed';
+            const DISMISS_DAYS   = 7;
+
+            function isDismissed() {
+                const ts = localStorage.getItem(DISMISS_KEY);
+                if (!ts) return false;
+                return (Date.now() - parseInt(ts)) < DISMISS_DAYS * 86400000;
+            }
+
+            window.addEventListener('beforeinstallprompt', e => {
+                e.preventDefault();
+                deferredPrompt = e;
+                if (!isDismissed() && installBanner) {
+                    installBanner.style.display = 'block';
+                }
+            });
+
+            installBtn?.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                if (installBanner) installBanner.style.display = 'none';
+                console.log('[PWA] Install outcome:', outcome);
+            });
+
+            dismissBtn?.addEventListener('click', () => {
+                localStorage.setItem(DISMISS_KEY, Date.now().toString());
+                if (installBanner) installBanner.style.display = 'none';
+            });
+
+            // Hide banner once app is installed
+            window.addEventListener('appinstalled', () => {
+                if (installBanner) installBanner.style.display = 'none';
+                deferredPrompt = null;
+                console.log('[PWA] App installed successfully!');
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            //  OFFLINE BACKGROUND SYNC LISTENER
+            // ═══════════════════════════════════════════════════════════════
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.addEventListener('message', event => {
+                    if (event.data?.type === 'OFFLINE_SYNC_COMPLETE') {
+                        // Show a toast that offline queued action was replayed
+                        showToast('✅ Your offline action was synced successfully!', 'success');
+                    }
+                });
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            //  SIMPLE TOAST HELPER
+            // ═══════════════════════════════════════════════════════════════
+            function showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                const colors = { success: '#10b981', error: '#ef4444', info: '#4f46e5' };
+                toast.style.cssText = `
+                    position: fixed; bottom: calc(80px + env(safe-area-inset-bottom));
+                    left: 50%; transform: translateX(-50%) translateY(20px);
+                    background: ${colors[type] || colors.info}; color: white;
+                    padding: 0.75rem 1.5rem; border-radius: 50px;
+                    font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.88rem;
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+                    z-index: 9999; opacity: 0; transition: all 0.3s ease;
+                    white-space: nowrap; max-width: 90vw;
+                `;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                requestAnimationFrame(() => {
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translateX(-50%) translateY(0)';
+                });
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3500);
+            }
+
+            // Expose toast globally so other scripts can use it
+            window.chamahubToast = showToast;
         });
 
-        // Register Service Worker for PWA
+        // ═══════════════════════════════════════════════════════════════════
+        //  SERVICE WORKER + PUSH NOTIFICATIONS REGISTRATION
+        // ═══════════════════════════════════════════════════════════════════
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    console.log('[SW] Registered. Scope:', registration.scope);
+
+                    // ── Request push notification permission on demand ──
+                    // We expose a global function so the UI can call it
+                    window.chamahubRequestPush = async function () {
+                        if (!('Notification' in window) || !('PushManager' in window)) {
+                            console.warn('[Push] Not supported.');
+                            return;
+                        }
+                        const permission = await Notification.requestPermission();
+                        if (permission !== 'granted') return;
+
+                        try {
+                            // Note: Replace VAPID_PUBLIC_KEY below with your actual VAPID public key
+                            // Generate at: https://vapidkeys.com/ or use php artisan vapid:generate
+                            const VAPID_PUBLIC_KEY = '{{ env("VAPID_PUBLIC_KEY", "") }}';
+                            if (!VAPID_PUBLIC_KEY) return; // VAPID not configured yet
+
+                            const sub = await registration.pushManager.subscribe({
+                                userVisibleOnly: true,
+                                applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+                            });
+
+                            const subJson = sub.toJSON();
+                            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+                            await fetch('/api/push-subscriptions', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-XSRF-TOKEN': decodeURIComponent(
+                                        (document.cookie.match(/XSRF-TOKEN=([^;]+)/) || [])[1] || ''
+                                    ),
+                                    'Accept': 'application/json',
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify({
+                                    endpoint: subJson.endpoint,
+                                    keys: subJson.keys,
+                                }),
+                            });
+                            console.log('[Push] Subscription saved.');
+                        } catch (err) {
+                            console.error('[Push] Subscribe failed:', err);
+                        }
+                    };
+
+                    // ── Helper: queue a request for background sync ──
+                    window.chamahubQueueOffline = function (url, method, headers, body) {
+                        navigator.serviceWorker.ready.then(reg => {
+                            reg.active?.postMessage({
+                                type: 'QUEUE_OFFLINE_REQUEST',
+                                request: { url, method, headers, body },
+                            });
+                            reg.sync?.register('chamahub-bg-sync').catch(() => {});
+                        });
+                    };
+
+                } catch (err) {
+                    console.error('[SW] Registration failed:', err);
+                }
             });
+        }
+
+        // ── VAPID key decoder helper ──
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64  = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const raw = atob(base64);
+            return new Uint8Array([...raw].map(c => c.charCodeAt(0)));
         }
     </script>
     @stack('scripts')

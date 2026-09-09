@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4f46e5">
+    <title>ChamaHub — You're Offline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            font-family: 'Outfit', sans-serif;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #4f46e5; top: -100px; right: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: #ec4899; bottom: -80px; left: -80px; }
+        .orb-3 { width: 200px; height: 200px; background: #f59e0b; bottom: 30%; right: 10%; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 28px;
+            padding: 3rem 2.5rem;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Animated Logo */
+        .logo-wrap {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4f46e5, #ec4899, #f59e0b);
+            background-size: 200% 200%;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            animation: morph 6s ease-in-out infinite, gradShift 6s ease infinite;
+            box-shadow: 0 8px 30px rgba(79,70,229,0.5);
+        }
+        @keyframes morph {
+            0%,100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            34%      { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+            67%      { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+        }
+        @keyframes gradShift {
+            0%,100% { background-position: 0% 50%; }
+            50%      { background-position: 100% 50%; }
+        }
+
+        /* Wifi off icon animation */
+        .wifi-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.25rem;
+            display: block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,100% { transform: scale(1); opacity: 1; }
+            50%      { transform: scale(0.92); opacity: 0.7; }
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #a5b4fc, #f9a8d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .retry-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 8px 24px rgba(79,70,229,0.5);
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(79,70,229,0.7);
+        }
+        .retry-btn:active {
+            transform: translateY(0);
+        }
+        .retry-btn span.spin {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .tip {
+            margin-top: 1.75rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.45);
+        }
+        .tip strong { color: rgba(255,255,255,0.7); }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="card">
+        <div class="logo-wrap">∞</div>
+
+        <span class="wifi-icon">📡</span>
+
+        <h1>You're Offline</h1>
+        <p>
+            ChamaHub can't reach the server right now.<br>
+            Check your internet connection and try again.
+        </p>
+
+        <button class="retry-btn" onclick="retryConnection(this)">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" id="retryIcon">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+            </svg>
+            Try Again
+        </button>
+
+        <div class="tip">
+            <strong>💡 Tip:</strong> Some pages may be available from your browser's cached version.
+            Recently visited pages like your dashboard can load even without internet.
+        </div>
+    </div>
+
+    <script>
+        function retryConnection(btn) {
+            const icon = document.getElementById('retryIcon');
+            icon.style.animation = 'spin 0.8s linear infinite';
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spin">↻</span> Checking...';
+
+            // Try to fetch a small ping endpoint
+            fetch('/manifest.json', { method: 'HEAD', cache: 'no-store' })
+                .then(() => { window.location.reload(); })
+                .catch(() => {
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg> Try Again';
+                        icon.style.animation = '';
+                    }, 2000);
+                });
+        }
+    </script>
+</body>
+</html>
