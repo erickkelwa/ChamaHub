@@ -3,15 +3,11 @@
 namespace App\Notifications;
 
 use App\Models\Contribution;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ContributionReminderNotification extends Notification implements ShouldQueue
+class ContributionReminderNotification extends Notification
 {
-    use Queueable;
-
     public Contribution $contribution;
 
     public function __construct(Contribution $contribution)
