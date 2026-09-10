@@ -16,7 +16,8 @@ return [
     'consumer_secret' => env('MPESA_CONSUMER_SECRET', 'YOUR_SANDBOX_CONSUMER_SECRET'),
     'shortcode'       => env('MPESA_SHORTCODE', '174379'),          // Sandbox default paybill
     'passkey'         => env('MPESA_PASSKEY', 'YOUR_PASSKEY'),
-    'callback_url'    => env('MPESA_CALLBACK_URL', 'https://yourdomain.com/mpesa/callback'),
+    // Callback URL: falls back to APP_URL so it auto-resolves in every environment.
+    'callback_url'    => env('MPESA_CALLBACK_URL', rtrim(env('APP_URL', 'https://chamahub.onrender.com'), '/') . '/mpesa/callback'),
     'sandbox'         => env('MPESA_SANDBOX', true),                // Set to false in production
 
 ];

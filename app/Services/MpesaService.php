@@ -21,9 +21,16 @@ class MpesaService
         $this->shortCode      = config('mpesa.shortcode');
         $this->passkey        = config('mpesa.passkey');
         $callback = config('mpesa.callback_url');
+        // If running locally, derive callback from APP_URL (Render URL) so Safaricom can reach it.
         if (empty($callback) || str_starts_with($callback, 'http://localhost') || str_starts_with($callback, 'http://127.0.0.1')) {
-            $callback = 'https://example.com/mpesa/callback';
+            $appUrl = rtrim(config('app.url', 'https://chamahub.onrender.com'), '/');
+            // If APP_URL itself is local, use the known production URL as fallback
+            if (str_starts_with($appUrl, 'http://localhost') || str_starts_with($appUrl, 'http://127.0.0.1')) {
+                $appUrl = 'https://chamahub.onrender.com';
+            }
+            $callback = $appUrl . '/mpesa/callback';
         } elseif (str_starts_with($callback, 'http://')) {
+            // Safaricom requires HTTPS
             $callback = str_replace('http://', 'https://', $callback);
         }
         $this->callbackUrl    = $callback;
