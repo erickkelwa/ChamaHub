@@ -59,15 +59,56 @@ class MpesaService
     }
 
     /**
+     * Normalize any Kenyan phone number to the 12-digit 254XXXXXXXXX format
+     * that Safaricom's STK Push API requires.
+     *
+     * Handles: 07XXXXXXXX, 01XXXXXXXX, +2547XXXXXXXX, 2547XXXXXXXX,
+     *          numbers with spaces/dashes/parentheses.
+     *
+     * Returns null when the number cannot be mapped to a valid Kenyan mobile.
+     */
+    public static function normalizePhone(string $raw): ?string
+    {
+        // Strip everything except digits
+        $digits = preg_replace('/[^0-9]/', '', $raw);
+
+        // Handle leading '254' (possibly from '+254...')
+        if (str_starts_with($digits, '254')) {
+            $normalized = $digits;
+        // Handle local format: 07XXXXXXXX or 01XXXXXXXX
+        } elseif (str_starts_with($digits, '0') && strlen($digits) === 10) {
+            $normalized = '254' . substr($digits, 1);
+        // Handle 9-digit number without leading 0 or country code (e.g. 7XXXXXXXX)
+        } elseif (strlen($digits) === 9) {
+            $normalized = '254' . $digits;
+        } else {
+            return null;
+        }
+
+        // Must be exactly 12 digits: 254 + 9-digit subscriber number
+        if (!preg_match('/^254[0-9]{9}$/', $normalized)) {
+            return null;
+        }
+
+        return $normalized;
+    }
+
+    /**
      * Initiate an STK Push (Lipa na M-Pesa) request.
      *
-     * @param string $phone  Phone number in format 2547XXXXXXXX
+     * @param string $phone  Phone number in any recognisable Kenyan format
      * @param float  $amount Amount to charge
      * @param string $accountRef Reference (e.g. "Contribution - August 2026")
      * @param string $description Short description
      */
     public function stkPush(string $phone, float $amount, string $accountRef, string $description): array
     {
+        // Normalize the phone number before anything else
+        $phone = self::normalizePhone($phone);
+        if (!$phone) {
+            return ['success' => false, 'message' => "Invalid phone number. Use a Safaricom/Airtel number like 0712345678 or 254712345678."];
+        }
+
         $token = $this->getAccessToken();
 
         if (!$token) {
