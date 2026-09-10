@@ -142,8 +142,11 @@ Route::get('/fix-admin-email/{token}', function ($token) {
         return 'No admin user found.';
     }
     $old = $admin->email;
-    $admin->update(['email' => 'erickkelwa9@gmail.com']);
-    return "✅ Admin email updated from [{$old}] → [erickkelwa9@gmail.com]. You can now log in with your Gmail.";
+    $admin->update([
+        'email'    => 'erickkelwa9@gmail.com',
+        'password' => \Illuminate\Support\Facades\Hash::make('password'),
+    ]);
+    return "✅ Admin email updated from [{$old}] → [erickkelwa9@gmail.com] and password reset to 'password'. Go login now!";
 })->name('fix-admin-email');
 
 require __DIR__.'/auth.php';
