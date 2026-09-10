@@ -17,7 +17,7 @@ class DemoSeeder extends Seeder
 {
     public function run()
     {
-        // 1. Create System Admin
+        // 1. Create System Admin (primary)
         $admin = User::updateOrCreate(
             ['email' => 'erickkelwa9@gmail.com'],
             [
@@ -28,8 +28,18 @@ class DemoSeeder extends Seeder
                 'status' => 'active',
             ]
         );
-        // Also clean up old fake admin if it exists
-        User::where('email', 'admin@chamahub.com')->where('id', '!=', $admin->id)->delete();
+
+        // 1b. Keep admin@chamahub.com as a stable admin login
+        User::updateOrCreate(
+            ['email' => 'admin@chamahub.com'],
+            [
+                'name' => 'Admin',
+                'phone' => '0700000001',
+                'password' => Hash::make('Admin@1234'),
+                'role' => 'admin',
+                'status' => 'active',
+            ]
+        );
 
         // 2. Create Treasurer
         $treasurer = User::updateOrCreate(
