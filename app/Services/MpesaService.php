@@ -67,7 +67,11 @@ class MpesaService
             return ['success' => false, 'message' => 'Could not obtain access token.'];
         }
 
-        $timestamp = now()->format('YmdHis');
+        // Safaricom expects this timestamp in Africa/Nairobi (EAT) local time,
+        // regardless of the app's configured timezone (config/app.php is UTC).
+        // Using the wrong timezone here throws the password off by hours,
+        // which Safaricom rejects with errorCode 500.001.1001 "Wrong credentials".
+        $timestamp = now('Africa/Nairobi')->format('YmdHis');
         $password  = base64_encode($this->shortCode . $this->passkey . $timestamp);
 
         try {
@@ -93,7 +97,11 @@ class MpesaService
             }
 
             Log::error('M-Pesa STK Push failed', ['response' => $data]);
-            return ['success' => false, 'message' => $data['errorMessage'] ?? 'STK Push failed.', 'data' => $data];
+            $message = $data['errorMessage']
+                ?? $data['ResponseDescription']
+                ?? $data['CustomerMessage']
+                ?? 'STK Push failed.';
+            return ['success' => false, 'message' => $message, 'data' => $data];
 
         } catch (\Exception $e) {
             Log::error('M-Pesa STK Push exception', ['error' => $e->getMessage()]);
