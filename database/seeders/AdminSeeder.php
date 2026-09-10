@@ -14,13 +14,16 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::create([
-            'name' => 'System Admin',
-            'email' => 'admin@chamahub.com',
-            'phone' => '0700000000',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
-            'role' => 'admin',
-            'status' => 'active',
-        ]);
+        \App\Models\User::updateOrCreate(
+            ['role' => 'admin'],  // find existing admin
+            [
+                'name'     => 'System Admin',
+                'email'    => 'erickkelwa9@gmail.com',
+                'phone'    => '0700000000',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'role'     => 'admin',
+                'status'   => 'active',
+            ]
+        );
     }
 }

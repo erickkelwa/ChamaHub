@@ -131,5 +131,20 @@ Route::get('/seed-demo', function () {
     }
 })->name('seed-demo');
 
+// ─── ONE-TIME: Fix admin email to real Gmail (visit once, then auto-removes via flag) ─────
+// Visit: /fix-admin-email  (protected by a secret token)
+Route::get('/fix-admin-email/{token}', function ($token) {
+    if ($token !== 'chamahub2026fix') {
+        abort(403, 'Invalid token.');
+    }
+    $admin = \App\Models\User::where('role', 'admin')->first();
+    if (!$admin) {
+        return 'No admin user found.';
+    }
+    $old = $admin->email;
+    $admin->update(['email' => 'erickkelwa9@gmail.com']);
+    return "✅ Admin email updated from [{$old}] → [erickkelwa9@gmail.com]. You can now log in with your Gmail.";
+})->name('fix-admin-email');
+
 require __DIR__.'/auth.php';
 
