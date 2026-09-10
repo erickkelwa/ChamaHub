@@ -8,6 +8,7 @@ use App\Models\Loan;
 use App\Models\Meeting;
 use App\Models\User;
 use App\Notifications\ContributionReminderNotification;
+use App\Notifications\DuesReminderNotification;
 use App\Notifications\LoanApprovedNotification;
 use App\Notifications\CustomResetPasswordNotification;
 use Illuminate\Http\Request;
@@ -47,26 +48,51 @@ class ReportController extends Controller
     {
         $unpaid = Contribution::with('user')
             ->where('status', '!=', 'paid')
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'member')->where('status', 'active');
+            })
             ->get();
 
-        foreach ($unpaid as $contribution) {
-            if ($contribution->user) {
-                // Record in-app notification
+        $sentCount = 0;
+        $failedCount = 0;
+
+        foreach ($unpaid->groupBy('user_id') as $contributions) {
+            $member = $contributions->first()->user;
+
+            try {
+                // One email per member, including every outstanding month.
+                $member->notify(new DuesReminderNotification($contributions));
+
+                $totalBalance = $contributions->sum(function ($contribution) {
+                    return $contribution->amount_due - $contribution->amount_paid;
+                });
+
+                // Record the same reminder in the member's in-app notifications.
                 \App\Models\Notification::create([
-                    'user_id' => $contribution->user->id,
-                    'type'    => 'contribution_reminder',
-                    'title'   => 'Contribution Reminder - ' . $contribution->month,
-                    'message' => 'Reminder: You have an unpaid contribution balance of Ksh ' . number_format($contribution->amount_due - $contribution->amount_paid, 2) . ' for ' . $contribution->month . '.',
+                    'user_id' => $member->id,
+                    'type'    => 'dues_reminder',
+                    'title'   => 'Contribution Dues Reminder',
+                    'message' => 'Reminder: Your total outstanding contribution balance is Ksh ' . number_format($totalBalance, 2) . '.',
                     'is_read' => false,
                     'sent_at' => now(),
                 ]);
 
-                // Send email notification
-                $contribution->user->notify(new ContributionReminderNotification($contribution));
+                $sentCount++;
+            } catch (\Throwable $exception) {
+                $failedCount++;
+                Log::error('Unable to send contribution dues reminder.', [
+                    'user_id' => $member->id,
+                    'email' => $member->email,
+                    'error' => $exception->getMessage(),
+                ]);
             }
         }
 
-        return back()->with('success', 'Contribution reminders sent to ' . $unpaid->count() . ' member(s).');
+        if ($failedCount > 0) {
+            return back()->with('error', "Dues reminders were emailed to {$sentCount} member(s); {$failedCount} could not be sent. Check the application log.");
+        }
+
+        return back()->with('success', "Dues reminders emailed to {$sentCount} member(s).");
     }
 
     /**

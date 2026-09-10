@@ -10,8 +10,8 @@
         {{-- ── Send bulk reminders to all members with unpaid contributions ── --}}
         <form action="{{ route('admin.reports.reminders') }}" method="POST">
             @csrf
-            <button type="submit" class="btn btn-primary" onclick="return confirm('Send reminders to all members with unpaid contributions?')">
-                <i class="bi bi-bell me-1"></i> Send Payment Reminders
+            <button type="submit" class="btn btn-primary" onclick="return confirm('Email a dues reminder to every active member with outstanding contributions?')">
+                <i class="bi bi-envelope me-1"></i> Email Dues Reminders
             </button>
         </form>
 
