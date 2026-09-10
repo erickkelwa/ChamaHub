@@ -158,11 +158,31 @@
             position: relative;
             display: flex; align-items: center;
         }
-        .input-wrap i {
+        .input-wrap > i {
             position: absolute;
             right: 16px;
             color: rgba(255,255,255,0.4);
             font-size: 1rem;
+            pointer-events: none;
+        }
+        .password-wrap .bi-lock-fill { right: 48px; }
+        .password-wrap .form-control { padding-right: 82px; }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            border: 0;
+            background: transparent;
+            color: rgba(255,255,255,0.65);
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            padding: 7px;
+        }
+        .password-toggle:hover,
+        .password-toggle:focus { color: white; }
+        .password-toggle i {
+            position: static;
+            color: inherit;
             pointer-events: none;
         }
 
@@ -339,12 +359,15 @@
 
                 <!-- Password -->
                 <div class="form-group">
-                    <div class="input-wrap">
+                    <div class="input-wrap password-wrap">
                         <input id="password" type="password" name="password"
                                class="form-control"
                                placeholder="Password"
                                required autocomplete="current-password">
                         <i class="bi bi-lock-fill"></i>
+                        <button type="button" class="password-toggle" aria-label="Show password" aria-pressed="false">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
                     @error('password')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -393,6 +416,17 @@
             p.style.opacity = Math.random() * 0.5 + 0.1;
             container.appendChild(p);
         }
+
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.querySelector('.password-toggle');
+
+        passwordToggle.addEventListener('click', () => {
+            const isHidden = passwordInput.type === 'password';
+            passwordInput.type = isHidden ? 'text' : 'password';
+            passwordToggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+            passwordToggle.setAttribute('aria-pressed', String(isHidden));
+            passwordToggle.querySelector('i').className = isHidden ? 'bi bi-eye-slash' : 'bi bi-eye';
+        });
     </script>
 </body>
 </html>

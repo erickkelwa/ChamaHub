@@ -36,10 +36,15 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // This application currently manages one Chama. Its first registered
+        // account is the Chama owner; later registrations are members.
+        $isFirstUser = ! User::query()->exists();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $isFirstUser ? 'admin' : 'member',
         ]);
 
         event(new Registered($user));
