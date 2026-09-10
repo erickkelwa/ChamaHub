@@ -88,6 +88,7 @@ Route::middleware('auth')->group(function () {
         // Reports
         Route::get('admin/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('admin.reports.index');
         Route::post('admin/reports/reminders', [\App\Http\Controllers\Admin\ReportController::class, 'sendReminders'])->name('admin.reports.reminders');
+        Route::post('admin/reports/test-email', [\App\Http\Controllers\Admin\ReportController::class, 'sendTestEmail'])->name('admin.reports.test-email');
         
         // Dividends Calculator
         Route::get('admin/dividends', [\App\Http\Controllers\Admin\DividendController::class, 'index'])->name('admin.dividends.index');

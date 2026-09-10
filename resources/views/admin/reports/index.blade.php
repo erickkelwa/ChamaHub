@@ -6,12 +6,27 @@
         <h2 class="fw-bold mb-0">Reports & Analytics</h2>
         <p class="text-muted">Financial summary and group performance overview.</p>
     </div>
-    <form action="{{ route('admin.reports.reminders') }}" method="POST">
-        @csrf
-        <button type="submit" class="btn btn-primary" onclick="return confirm('Send reminders to all members with unpaid contributions?')">
-            <i class="bi bi-bell me-1"></i> Send Payment Reminders
-        </button>
-    </form>
+    <div class="d-flex gap-2 flex-wrap justify-content-end">
+        {{-- ── Send bulk reminders to all members with unpaid contributions ── --}}
+        <form action="{{ route('admin.reports.reminders') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-primary" onclick="return confirm('Send reminders to all members with unpaid contributions?')">
+                <i class="bi bi-bell me-1"></i> Send Payment Reminders
+            </button>
+        </form>
+
+        {{-- ── Test Email: fires 3 real emails to YOUR inbox right now ── --}}
+        <form action="{{ route('admin.reports.test-email') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-outline-info"
+                    style="border-color:#0ea5e9; color:#0ea5e9;"
+                    onclick="return confirm('This will send 3 test emails (Contribution Reminder, Loan Approved, Password Reset) to {{ auth()->user()->email }}. Continue?')">
+                <i class="bi bi-envelope-check me-1"></i>
+                Send Test Email to Me
+                <small class="d-block" style="font-size:10px; opacity:0.75; line-height:1;">{{ auth()->user()->email }}</small>
+            </button>
+        </form>
+    </div>
 </div>
 
 <!-- Summary Stats -->
