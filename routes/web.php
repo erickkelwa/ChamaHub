@@ -118,6 +118,12 @@ Route::middleware('auth')->group(function () {
     Route::post('mpesa/deposit', [\App\Http\Controllers\MpesaController::class, 'initiateDeposit'])->name('mpesa.deposit');
 });
 
+// Safaricom posts STK results to this public webhook. It cannot include a
+// browser CSRF token, so only this callback endpoint is exempted.
+Route::post('mpesa/callback', [\App\Http\Controllers\MpesaController::class, 'callback'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
+    ->name('mpesa.callback');
+
 // 1-Click Public/Admin Demo Seeder Trigger
 Route::get('/seed-demo', function () {
     try {
@@ -137,16 +143,29 @@ Route::get('/fix-admin-email/{token}', function ($token) {
     if ($token !== 'chamahub2026fix') {
         abort(403, 'Invalid token.');
     }
-    $admin = \App\Models\User::where('role', 'admin')->first();
-    if (!$admin) {
-        return 'No admin user found.';
+
+    // Find the user: prefer existing Gmail account, fallback to role-based admin
+    $user = \App\Models\User::where('email', 'erickkelwa9@gmail.com')->first()
+         ?? \App\Models\User::where('role', 'admin')->first();
+
+    if (!$user) {
+        return 'No admin or matching user found.';
     }
-    $old = $admin->email;
-    $admin->update([
+
+    $old = "email={$user->email}, role={$user->role}";
+    $user->update([
         'email'    => 'erickkelwa9@gmail.com',
         'password' => \Illuminate\Support\Facades\Hash::make('password'),
+        'role'     => 'admin',
+        'status'   => 'active',
     ]);
-    return "✅ Admin email updated from [{$old}] → [erickkelwa9@gmail.com] and password reset to 'password'. Go login now!";
+
+    // Clean up any duplicate old admin account
+    \App\Models\User::where('email', 'admin@chamahub.com')
+        ->where('id', '!=', $user->id)
+        ->delete();
+
+    return "✅ Done! [{$old}] → admin with email erickkelwa9@gmail.com. Login: erickkelwa9@gmail.com / password";
 })->name('fix-admin-email');
 
 require __DIR__.'/auth.php';
